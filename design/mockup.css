@@ -1,28 +1,53 @@
 /* Troubleshooting */
 
-* {
+/* * {
     outline: 1px solid red;
-}
+} */
 
 /* Layout */
+
+:root {
+    --page-header-height: 80px;
+    --app-heading-height: 80px;
+}
 
 html {
     box-sizing: border-box;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: inherit;
 }
 
-html, body {
-	height: 100vh;
+html,
+body {
+    height: 100%;
+    overflow-y: hidden;
 }
 
-h1, h2, h3 {
+body {
+    /* Needed for overflow: auto to work below */
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    /* --end-- */
+}
+
+header {
+    height: var(--page-header-height);
+    padding: 20px;
+}
+
+h1,
+h2,
+h3 {
     margin: 0;
 }
 
 .app {
+    min-height: 0;
+
     /* Grid container */
     display: grid;
     grid-template-columns: minmax(250px, 1fr) 3fr;
@@ -38,7 +63,7 @@ h1, h2, h3 {
     /* Grid container */
     display: grid;
     grid-template-columns: 1fr 50px;
-    grid-template-rows: 80px 1fr;
+    grid-template-rows: var(--app-heading-height) 1fr;
     grid-template-areas:
         "heading menu"
         "list list";
@@ -68,6 +93,9 @@ h1, h2, h3 {
     flex-direction: column;
     justify-content: flex-start;
     gap: 16px;
+
+    height: calc(100vh - calc(var(--page-header-height) + var(--app-heading-height)));
+    overflow-y: auto;
 }
 
 .items-area {
@@ -77,7 +105,7 @@ h1, h2, h3 {
     /* Grid container */
     display: grid;
     grid-template-columns: 1fr 50px;
-    grid-template-rows: 80px 1fr;
+    grid-template-rows: var(--app-heading-height) 1fr;
     grid-template-areas:
         "heading menu"
         "list list";
@@ -106,6 +134,9 @@ h1, h2, h3 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 16px;
+
+    height: calc(100vh - calc(var(--page-header-height) + var(--app-heading-height)));
+    overflow-y: auto;
 }
 
 .item-card {
@@ -113,7 +144,8 @@ h1, h2, h3 {
 }
 
 .item-card .description {
-    min-height: 1.5rem;
+    max-height: 5rem;
+    overflow-y: auto;
 }
 
 
@@ -121,18 +153,19 @@ h1, h2, h3 {
 
 :root {
     --light-blue: rgb(140, 220, 254);
-    --dark-blue: #4e598cff;
+    --purple: rgb(78, 89, 140);
+    --dark-purple: rgb(38, 49, 96);
     --sunset: rgb(248, 213, 168);
+    --dark-sunset: rgb(155, 122, 79);
 }
 
 header {
     background-color: var(--light-blue);
-    padding: 20px;
 }
 
 .heading {
     color: white;
-    background-color: var(--dark-blue);
+    background-color: var(--purple);
     padding-left: 20px;
 
     /* Flex container (for centering) */
@@ -144,8 +177,12 @@ header {
     border: 2px solid;
 }
 
-.lists-area .menu {
-    background-color: var(--dark-blue);
+.menu {
+    background-color: var(--purple);
+}
+
+.menu button {
+    box-shadow: 5px 5px 5px var(--dark-purple);
 }
 
 .lists-list {
@@ -157,14 +194,16 @@ header {
     padding: 10px 20px;
     background-color: white;
     border-radius: 5px;
+    border: 1px solid var(--dark-sunset);
+    box-shadow: 5px 5px 5px var(--dark-sunset);
+}
+
+.list-card .title {
+    color: var(--dark-sunset);
 }
 
 .items-area {
     border: 2px solid;
-}
-
-.items-area .menu {
-    background-color: var(--dark-blue);
 }
 
 .items-list {
@@ -176,9 +215,13 @@ header {
     padding: 10px 20px;
     background-color: white;
     border-radius: 5px;
+    border: 1px solid var(--dark-sunset);
+    box-shadow: 5px 5px 5px var(--dark-sunset);
 }
 
 .item-card .title {
+    color: var(--dark-sunset);
+
     /* Flex container (for centering) */
     display: flex;
     align-items: center;
@@ -192,7 +235,8 @@ header {
     background-color: white;
 }
 
-.new-btn .iconify { /* Icon inside button */
+.new-btn .iconify {
+    /* Icon inside button */
     height: 20px;
     width: 20px;
 }
