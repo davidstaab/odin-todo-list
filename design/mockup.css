@@ -1,0 +1,208 @@
+/* Troubleshooting */
+
+* {
+    outline: 1px solid red;
+}
+
+/* Layout */
+
+html {
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+html, body {
+	height: 100vh;
+}
+
+h1, h2, h3 {
+    margin: 0;
+}
+
+.app {
+    /* Grid container */
+    display: grid;
+    grid-template-columns: minmax(250px, 1fr) 3fr;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+        "lists items";
+}
+
+.lists-area {
+    /* Grid item */
+    grid-area: lists;
+
+    /* Grid container */
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    grid-template-rows: 80px 1fr;
+    grid-template-areas:
+        "heading menu"
+        "list list";
+}
+
+.lists-area .heading {
+    /* Grid item */
+    grid-area: heading;
+}
+
+.lists-area .menu {
+    /* Grid item */
+    grid-area: menu;
+
+    /* Flex container (for centering) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lists-area .lists-list {
+    /* Grid item */
+    grid-area: list;
+
+    /* Flex container */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 16px;
+}
+
+.items-area {
+    /* Grid item */
+    grid-area: items;
+
+    /* Grid container */
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    grid-template-rows: 80px 1fr;
+    grid-template-areas:
+        "heading menu"
+        "list list";
+}
+
+.items-area .heading {
+    /* Grid item */
+    grid-area: heading;
+}
+
+.items-area .menu {
+    /* Grid item */
+    grid-area: menu;
+
+    /* Flex container (for centering) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.items-area .items-list {
+    /* Grid item */
+    grid-area: list;
+
+    /* Grid container */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.item-card {
+    min-height: 200px;
+}
+
+.item-card .description {
+    min-height: 1.5rem;
+}
+
+
+/* Style */
+
+:root {
+    --light-blue: rgb(140, 220, 254);
+    --dark-blue: #4e598cff;
+    --sunset: rgb(248, 213, 168);
+}
+
+header {
+    background-color: var(--light-blue);
+    padding: 20px;
+}
+
+.heading {
+    color: white;
+    background-color: var(--dark-blue);
+    padding-left: 20px;
+
+    /* Flex container (for centering) */
+    display: flex;
+    align-items: center;
+}
+
+.lists-area {
+    border: 2px solid;
+}
+
+.lists-area .menu {
+    background-color: var(--dark-blue);
+}
+
+.lists-list {
+    background-color: var(--sunset);
+    padding: 10px;
+}
+
+.list-card {
+    padding: 10px 20px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.items-area {
+    border: 2px solid;
+}
+
+.items-area .menu {
+    background-color: var(--dark-blue);
+}
+
+.items-list {
+    background-color: var(--sunset);
+    padding: 10px;
+}
+
+.item-card {
+    padding: 10px 20px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.item-card .title {
+    /* Flex container (for centering) */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.new-btn {
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: none;
+    background-color: white;
+}
+
+.new-btn .iconify { /* Icon inside button */
+    height: 20px;
+    width: 20px;
+}
+
+.iconify {
+    border-radius: 100%;
+}
+
+.due .date {
+    font-weight: bolder;
+    font-size: 1.1rem;
+    color: rgb(168, 35, 35);
+}
