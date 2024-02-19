@@ -59,6 +59,7 @@ h3 {
 .lists-area {
     /* Grid item */
     grid-area: lists;
+    min-height: 0; /* Don't overflow assigned grid area when content is large */
 
     /* Grid container */
     display: grid;
@@ -94,13 +95,14 @@ h3 {
     justify-content: flex-start;
     gap: 16px;
 
-    height: calc(100vh - calc(var(--page-header-height) + var(--app-heading-height)));
+    height: 100%;
     overflow-y: auto;
 }
 
 .items-area {
     /* Grid item */
     grid-area: items;
+    min-height: 0; /* Don't overflow assigned grid area when content is large */
 
     /* Grid container */
     display: grid;
@@ -135,7 +137,7 @@ h3 {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 16px;
 
-    height: calc(100vh - calc(var(--page-header-height) + var(--app-heading-height)));
+    height: 100%;
     overflow-y: auto;
 }
 
@@ -157,6 +159,7 @@ h3 {
     --dark-purple: rgb(38, 49, 96);
     --sunset: rgb(248, 213, 168);
     --dark-sunset: rgb(155, 122, 79);
+    --selected-bg: rgb(254, 243, 230);
 }
 
 header {
@@ -200,6 +203,11 @@ header {
 
 .list-card .title {
     color: var(--dark-sunset);
+}
+
+.list-card.selected {
+    background-color: var(--selected-bg);
+    box-shadow: 2px 2px 2px var(--dark-sunset);
 }
 
 .items-area {
