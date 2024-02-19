@@ -12,7 +12,9 @@
   "author": "David Staab",
   "license": "GPL-3.0-only",
   "dependencies": {
-    "normalize.css": "^8.0.1"
+    "date-fns": "^3.3.1",
+    "normalize.css": "^8.0.1",
+    "safejslib": "^1.0.1"
   },
   "devDependencies": {
     "css-loader": "^6.10.0",
