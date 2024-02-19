@@ -1,0 +1,260 @@
+/* Troubleshooting */
+
+/* * {
+    outline: 1px solid red;
+} */
+
+/* Layout */
+
+:root {
+    --page-header-height: 80px;
+    --app-heading-height: 80px;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+html,
+body {
+    height: 100%;
+    overflow-y: hidden;
+}
+
+body {
+    /* Needed for overflow: auto to work below */
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    /* --end-- */
+}
+
+header {
+    height: var(--page-header-height);
+    padding: 20px;
+}
+
+h1,
+h2,
+h3 {
+    margin: 0;
+}
+
+.app {
+    min-height: 0;
+
+    /* Grid container */
+    display: grid;
+    grid-template-columns: minmax(250px, 1fr) 3fr;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+        "lists items";
+}
+
+.lists-area {
+    /* Grid item */
+    grid-area: lists;
+    min-height: 0; /* Don't overflow assigned grid area when content is large */
+
+    /* Grid container */
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    grid-template-rows: var(--app-heading-height) 1fr;
+    grid-template-areas:
+        "heading menu"
+        "list list";
+}
+
+.lists-area .heading {
+    /* Grid item */
+    grid-area: heading;
+}
+
+.lists-area .menu {
+    /* Grid item */
+    grid-area: menu;
+
+    /* Flex container (for centering) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lists-area .lists-list {
+    /* Grid item */
+    grid-area: list;
+
+    /* Flex container */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 16px;
+
+    height: 100%;
+    overflow-y: auto;
+}
+
+.items-area {
+    /* Grid item */
+    grid-area: items;
+    min-height: 0; /* Don't overflow assigned grid area when content is large */
+
+    /* Grid container */
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    grid-template-rows: var(--app-heading-height) 1fr;
+    grid-template-areas:
+        "heading menu"
+        "list list";
+}
+
+.items-area .heading {
+    /* Grid item */
+    grid-area: heading;
+}
+
+.items-area .menu {
+    /* Grid item */
+    grid-area: menu;
+
+    /* Flex container (for centering) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.items-area .items-list {
+    /* Grid item */
+    grid-area: list;
+
+    /* Grid container */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+
+    height: 100%;
+    overflow-y: auto;
+}
+
+.item-card {
+    min-height: 200px;
+}
+
+.item-card .description {
+    max-height: 5rem;
+    overflow-y: auto;
+}
+
+
+/* Style */
+
+:root {
+    --light-blue: rgb(140, 220, 254);
+    --purple: rgb(78, 89, 140);
+    --dark-purple: rgb(38, 49, 96);
+    --sunset: rgb(248, 213, 168);
+    --dark-sunset: rgb(155, 122, 79);
+    --selected-bg: rgb(254, 243, 230);
+}
+
+header {
+    background-color: var(--light-blue);
+}
+
+.heading {
+    color: white;
+    background-color: var(--purple);
+    padding-left: 20px;
+
+    /* Flex container (for centering) */
+    display: flex;
+    align-items: center;
+}
+
+.lists-area {
+    border: 2px solid;
+}
+
+.menu {
+    background-color: var(--purple);
+}
+
+.menu button {
+    box-shadow: 5px 5px 5px var(--dark-purple);
+}
+
+.lists-list {
+    background-color: var(--sunset);
+    padding: 10px;
+}
+
+.list-card {
+    padding: 10px 20px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid var(--dark-sunset);
+    box-shadow: 5px 5px 5px var(--dark-sunset);
+}
+
+.list-card .title {
+    color: var(--dark-sunset);
+}
+
+.list-card.selected {
+    background-color: var(--selected-bg);
+    box-shadow: 2px 2px 2px var(--dark-sunset);
+}
+
+.items-area {
+    border: 2px solid;
+}
+
+.items-list {
+    background-color: var(--sunset);
+    padding: 10px;
+}
+
+.item-card {
+    padding: 10px 20px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid var(--dark-sunset);
+    box-shadow: 5px 5px 5px var(--dark-sunset);
+}
+
+.item-card .title {
+    color: var(--dark-sunset);
+
+    /* Flex container (for centering) */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.new-btn {
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: none;
+    background-color: white;
+}
+
+.new-btn .iconify {
+    /* Icon inside button */
+    height: 20px;
+    width: 20px;
+}
+
+.iconify {
+    border-radius: 100%;
+}
+
+.due .date {
+    font-weight: bolder;
+    font-size: 1.1rem;
+    color: rgb(168, 35, 35);
+}
