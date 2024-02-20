@@ -28,23 +28,19 @@ export default class ListList {
 
     /**
      * 
-     * @param {string} listName 
+     * @param {string|number} list The list name, or a numeric index
      * @returns {ListList} this
      */
-    removeName(listName) {
-        let index = this.#lists.findIndex((elem) => elem.name === listName);
-        if (index < 0) throw new Error(`'${listName}' was not found in list of lists.`);
-        this.#lists.splice(index, 1);
-        return this;
-    }
+    remove(list) {
+        let itemIdx;
+        if (typeof list === 'string') {
+            itemIdx = this.#lists.findIndex((elem) => elem.name === list);
+            if (itemIdx < 0) throw new Error(`'${list}' was not found in list of lists.`);
+        } else {
+            itemIdx = list;
+        }
 
-    /**
-     * 
-     * @param {number} index 
-     * @returns {ListList} this
-     */
-    removeIdx(index) {
-        this.#lists.splice(index, 1);
+        this.#lists.splice(itemIdx, 1);
         return this;
     }
 

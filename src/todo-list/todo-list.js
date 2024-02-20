@@ -31,7 +31,7 @@ export default class TodoList {
 
     /**
      * 
-     * @param {TodoItem} item 
+     * @param {TodoItem|number} item An instance of the item, or a numeric index
      * @returns {TodoList}
      */
     remove(item) {
@@ -46,15 +46,16 @@ export default class TodoList {
             }
             return idx;
         }
-        
-        let itemIdx = findItemIdx.call(this, item);
-        if (itemIdx < 0) throw new Error(`${item} was not found in list.`);
-        this.#items.splice(itemIdx, 1);
-        return this;
-    }
 
-    removeIdx(index) {
-        this.#items.splice(index, 1);
+        let itemIdx;
+        if (item instanceof TodoList) {
+            itemIdx = findItemIdx.call(this, item);
+            if (itemIdx < 0) throw new Error(`${item} was not found in list.`);
+        } else {
+            itemIdx = item;
+        }
+
+        this.#items.splice(itemIdx, 1);
         return this;
     }
 
