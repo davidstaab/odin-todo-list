@@ -10,11 +10,12 @@ import * as dateFns from 'date-fns';
 export class PriorityEnum {
     static normal = Object.freeze(new PriorityEnum(0));
     static high = Object.freeze(new PriorityEnum(1));
-    static Large = Object.freeze(new PriorityEnum(2));
+    static highest = Object.freeze(new PriorityEnum(2));
     #value
 
     static compareAsc(a, b) {
-        return a.#value - b.#value;
+        let ret = a.#value - b.#value;
+        return ret;
     }
 
     constructor(value) {

@@ -64,14 +64,14 @@ export class TodoList {
 
     sortPriorityAsc() {
         this.#items.sort((a, b) => {
-            todo.PriorityEnum.compareAsc(a.deadline, b.deadline);
+            return todo.PriorityEnum.compareAsc(a.priority, b.priority);
         });
         return this;
     }
 
     sortPriorityDesc() {
         this.#items.sort((a, b) => {
-            -1 * todo.PriorityEnum.compareAsc(a.deadline, b.deadline);
+            return -1 * todo.PriorityEnum.compareAsc(a.priority, b.priority);
         });
         return this;
     }
