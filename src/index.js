@@ -7,31 +7,59 @@ import './index.css';
 import { PriorityEnum, TodoItem} from './todo/todo.js';
 import TodoList from './todo-list/todo-list.js';
 import ListList from './list-list/list-list.js';
+import * as UI from './browser/browser.js';
+import * as Store from './store/store.js';
 import * as dateFns from 'date-fns';
 
+///////
+// Utils
 
-let item1 = new TodoItem({
-    title: 'Hello World',
-    deadline: new Date('09-25-1981'),
-    priority: PriorityEnum.normal,
-    note: 'This is the note. It is kind of long.',
-});
+function load() {
 
-let item2 = new TodoItem({
-    title: 'Allo World',
-    deadline: new Date('09-25-2024'),
-    priority: PriorityEnum.high,
-    note: 'This is the note. It is kind of long.',
-});
+}
 
-let item3 = new TodoItem({
-    title: 'Goodbye World',
-    deadline: new Date('06-01-2030'),
-});
+function save() {
+    // Auto-call this on every change
+}
 
-let listA = new TodoList('first', [item1, item2]);
-let listB = new TodoList('second', [item3]);
+function createListsMenu() {
+    const btns = [
+        { name: 'new', icon: 'mdi-playlist-plus' },
+    ];
 
-let listOfLists = new ListList([listA, listB]);
-listOfLists.remove('first');
-console.dir(listOfLists);
+    for (let btn of btns) {
+        UI.createMenuBtn('lists', btn.name, btn.icon, handleNewList);
+    }
+}
+
+function createItemsMenu() {
+    const btns = [
+        { name: 'new', icon: 'mdi-plus-box-multiple-outline' },
+    ];
+
+    for (let btn of btns) {
+        UI.createMenuBtn('items', btn.name, btn.icon, handleNewItem);
+    }
+}
+
+////////////
+// Callbacks
+
+function handleNewList(params) {
+
+}
+
+/**
+ * 
+ * @param {UI.NewItemParams} params 
+ */
+function handleNewItem(params) {
+
+}
+
+///////
+// Init
+
+createListsMenu();
+createItemsMenu();
+// Load persisted state

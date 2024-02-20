@@ -14,8 +14,7 @@ export class PriorityEnum {
     #value
 
     static compareAsc(a, b) {
-        let ret = a.#value - b.#value;
-        return ret;
+        return a.#value - b.#value;
     }
 
     constructor(value) {
@@ -23,9 +22,17 @@ export class PriorityEnum {
     }
 
     toString() {
-        return this.#value.toString();
+        // NB: Depends on a design where the enum values are public properties
+        for (const key of Object.keys(PriorityEnum)) {
+            if (PriorityEnum[key] === this) {
+                return key;
+            }
+        }
+        return null;
     }
 }
+
+
 
 
 export class TodoItem {
