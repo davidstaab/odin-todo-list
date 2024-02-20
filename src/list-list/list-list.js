@@ -20,41 +20,38 @@ export default class ListList {
      * @returns {ListList} this
      */
     add(list) {
+        index = this.#lists.findIndex((elem) => elem.name === list.name);
+        if (index < 0) throw new Error(`A list named ${list.name} already exists.`);
         this.#lists.push(list);
         return this;
     }
 
     /**
      * 
-     * @param {TodoList} list 
+     * @param {string} listName 
      * @returns {ListList} this
      */
-    remove(list) {
-
-        // BUG: a.name === b.name is false in both implementations.
-        // I have no idea why. Even a weak equality (==) fails.
-
-        // let index = this.#lists.findIndex((elem) => elem.name === list.name);
-
-        function findItemIdx(todoList) {
-            let idx = -1;
-            for (let i = 0; i < this.#lists.length; i++) {
-                let a = todoList.name;
-                let b = this.lists[i].name;
-                if (a == b) {
-                    idx = i;
-                    break;
-                }
-            }
-            return idx;
-        }
-
-        let index = findItemIdx.call(this, list);
-        if (index < 0) throw new Error(`'${list}' was not found in list of lists.`);
+    removeName(listName) {
+        let index = this.#lists.findIndex((elem) => elem.name === listName);
+        if (index < 0) throw new Error(`'${listName}' was not found in list of lists.`);
         this.#lists.splice(index, 1);
         return this;
     }
 
+    /**
+     * 
+     * @param {number} index 
+     * @returns {ListList} this
+     */
+    removeIdx(index) {
+        this.#lists.splice(index, 1);
+        return this;
+    }
+
+    /**
+     * 
+     * @returns {ListList} this
+     */
     sortAsc() {
         // localeCompare does an alphanumeric sort across worldwide locales
         this.#lists.sort((a, b) => a.title.localeCompare(b.title));
