@@ -1,11 +1,30 @@
+'use strict'
+
 import * as safeJS from 'safejslib';
 import * as dateFns from 'date-fns';
 
-export const Priority = Object.freeze({
-    normal: Symbol('normal'),
-    high: Symbol('high'),
-    highest: Symbol('highest'),
-});
+/**
+ * @readonly
+ * @enum {number}
+ */
+export class PriorityEnum {
+    static normal = Object.freeze(new PriorityEnum(0));
+    static high = Object.freeze(new PriorityEnum(1));
+    static Large = Object.freeze(new PriorityEnum(2));
+    #value
+
+    static compareAsc(a, b) {
+        return a.#value - b.#value;
+    }
+
+    constructor(value) {
+        this.#value = value;
+    }
+
+    toString() {
+        return this.#value.toString();
+    }
+}
 
 
 export class TodoItem {
@@ -14,10 +33,22 @@ export class TodoItem {
     #priority
     #deadline
 
+    static areSame(a, b) {
+        if (!(a instanceof TodoItem && b instanceof TodoItem)) {
+            throw new Error('Both parameters must be instances of this class.');
+        }
+        return (
+                a.#title === b.#title
+            &&  a.#note === b.#note
+            &&  a.#priority === b.#priority
+            &&  a.#deadline === b.#deadline
+        );
+    }
+
     constructor({
         title,
         deadline,
-        priority = Priority.normal,
+        priority = PriorityEnum.normal,
         note = '',
     }) {
         // Go through the setter functions to validate params
@@ -45,11 +76,7 @@ export class TodoItem {
      * @param {Symbol} value A value from the Priority object
      */
     set priority(value) {
-        if (!Object.values(Priority).includes(value)) {
-            throw new Error(
-                `Priority cannot take value ${value.toString()} of type ${typeof value}.`
-            );
-        }
+        if (!(value instanceof PriorityEnum)) throw new TypeError(`${value} is not a PriorityEnum.`);
         this.#priority = value;
     }
 
