@@ -54,7 +54,7 @@ function handleNewList(params) {
  * @param {UI.NewItemParams} params 
  */
 function handleNewItem(params) {
-
+    console.dir(params);
 }
 
 ///////

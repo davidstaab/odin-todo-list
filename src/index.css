@@ -150,6 +150,18 @@ h3 {
     overflow-y: auto;
 }
 
+dialog form label {
+    display: block;
+}
+
+dialog form input[type="text"] {
+    width: 200px;
+}
+
+.dialog-heading {
+    margin-bottom: 1.5rem;
+}
+
 
 /* Style */
 
@@ -159,6 +171,7 @@ h3 {
     --dark-purple: rgb(38, 49, 96);
     --sunset: rgb(248, 213, 168);
     --dark-sunset: rgb(155, 122, 79);
+    --dialog-backdrop: rgba(155, 122, 79, 0.7);
     --selected-bg: rgb(254, 243, 230);
 }
 
@@ -266,5 +279,5 @@ dialog {
 }
 
 dialog::backdrop {
-    background-color: var(--dark-sunset);
+    background-color: var(--dialog-backdrop);
 }
