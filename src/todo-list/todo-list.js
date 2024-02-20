@@ -1,23 +1,27 @@
 'use strict'
 
 import * as dateFns from 'date-fns';
-import * as todo from '../todo/todo.js';
+import { PriorityEnum, TodoItem } from '../todo/todo.js';
 
-export class TodoList {
+export default class TodoList {
     #items
+    name
 
     /**
      * @constructor
      * @param {Object[]} items Items to pre-load the list with
      */
-    constructor(items = []) {
+    constructor(name = 'default', items = []) {
+        if (!(typeof name === 'string')) throw new Error('Name must be a string.');
+        if (name === '') throw new Error('Name cannot be empty.');
         if (!Array.isArray(items)) throw new Error('Argument is not an array of todo items.');
+        this.name = name;
         this.#items = items;
     }
 
     /**
      * 
-     * @param {todo.TodoItem} item 
+     * @param {TodoItem} item 
      * @returns {TodoList}
      */
     add(item) {
@@ -27,7 +31,7 @@ export class TodoList {
 
     /**
      * 
-     * @param {todo.TodoItem} item 
+     * @param {TodoItem} item 
      * @returns {TodoList}
      */
     remove(item) {
@@ -35,7 +39,7 @@ export class TodoList {
         function findItemIdx(todoItem) {
             let idx = -1;
             for (let i = 0; i < this.#items.length; i++) {
-                if (todo.TodoItem.areSame(todoItem, this.#items[i])) {
+                if (TodoItem.areSame(todoItem, this.#items[i])) {
                     idx = i;
                     break;
                 }
@@ -69,14 +73,14 @@ export class TodoList {
 
     sortPriorityAsc() {
         this.#items.sort((a, b) => {
-            return todo.PriorityEnum.compareAsc(a.priority, b.priority);
+            return PriorityEnum.compareAsc(a.priority, b.priority);
         });
         return this;
     }
 
     sortPriorityDesc() {
         this.#items.sort((a, b) => {
-            return -1 * todo.PriorityEnum.compareAsc(a.priority, b.priority);
+            return -1 * PriorityEnum.compareAsc(a.priority, b.priority);
         });
         return this;
     }

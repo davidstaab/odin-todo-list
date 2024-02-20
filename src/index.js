@@ -5,7 +5,8 @@ import 'normalize.css'; // npm module, not a file
 import './index.css';
 
 import { PriorityEnum, TodoItem} from './todo/todo.js';
-import { TodoList } from './todo-list/todo-list.js';
+import TodoList from './todo-list/todo-list.js';
+import ListList from './list-list/list-list.js';
 import * as dateFns from 'date-fns';
 
 
@@ -23,10 +24,14 @@ let item2 = new TodoItem({
     note: 'This is the note. It is kind of long.',
 });
 
-let list = new TodoList([item1, item2]);
+let item3 = new TodoItem({
+    title: 'Goodbye World',
+    deadline: new Date('06-01-2030'),
+});
 
-list.sortTitleAsc();
-console.dir(list);
-console.dir(list.sortDeadlineAsc().items);
-console.dir(list.sortPriorityAsc().items);
-console.dir(list.sortPriorityDesc().items);
+let listA = new TodoList('first', [item1, item2]);
+let listB = new TodoList('second', [item3]);
+
+let listOfLists = new ListList([listA, listB]);
+listOfLists.remove('first');
+console.dir(listOfLists);
