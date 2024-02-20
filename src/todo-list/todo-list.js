@@ -10,7 +10,7 @@ export class TodoList {
      * @constructor
      * @param {Object[]} items Items to pre-load the list with
      */
-    constructor(items) {
+    constructor(items = []) {
         if (!Array.isArray(items)) throw new Error('Argument is not an array of todo items.');
         this.#items = items;
     }
@@ -46,6 +46,11 @@ export class TodoList {
         let itemIdx = findItemIdx.call(this, item);
         if (itemIdx < 0) throw new Error(`${item} was not found in list.`);
         this.#items.splice(itemIdx, 1);
+        return this;
+    }
+
+    removeIdx(index) {
+        this.#items.splice(index, 1);
         return this;
     }
 
