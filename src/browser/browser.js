@@ -1,5 +1,7 @@
 'use strict'
 
+import newItemDialog from './browser-new-item.js';
+
 /* Design notes:
  * This module should encapsulate all calls to the browser's APIs.
  *   So DOM calls, event handlers, etc. all stay in here.
@@ -26,58 +28,23 @@ function createIconifyIcon(name) {
  */
 function displayNewItem(cbFn) {
 
-    function createDialog() {
-        const dialogEl = document.createElement('dialog');
-        dialogEl.id = 'new-item-dialog';
-
-        // Heading
-        const headingEl = document.createElement('h3');
-        headingEl.classList.add('dialog-heading');
-        headingEl.textContent = 'Create New Item';
-        dialogEl.appendChild(headingEl);
-        const formEl = document.createElement('form');
-        dialogEl.appendChild(formEl);
-        
-        // 'Title' input
-        const titleLabel = document.createElement('label');
-        titleLabel.for = 'new-item-title';
-        titleLabel.textContent = 'Title';
-        const titleInput = document.createElement('input');
-        titleInput.type = 'text';
-        titleInput.id = 'new-item-title';
-        titleInput.name = 'title';
-        formEl.appendChild(titleLabel);
-        formEl.appendChild(titleInput);
-
-        //TODO: Add remaining labels and inputs to form:
-        // priority (radio), deadline (date picker), note (textarea) <-- In that order!
-
-        const submitBtn = document.createElement('button');
-        submitBtn.type = 'submit';
-        formEl.appendChild(submitBtn);
-        formEl.addEventListener('submit', handleSubmit);
-
-        document.body.appendChild(dialogEl);
-        return dialogEl;
-    }
-
     function handleSubmit(e) {
         if (e.preventDefault) e.preventDefault(); // Prevent HTTP request
         const dialogEl = e.submitter.closest('dialog');
         const formEl = e.submitter.closest('form');
-        const inputs = formEl.querySelectorAll('input');
-
         dialogEl.close();
-
-        let inputVals = [];
-        inputs.forEach((elem) => inputVals.push(elem.value));
-
+        let formData = new FormData(formEl);
         formEl.reset();
-        cbFn(new NewItemParams(...inputVals)); // Depends on inputs in correct order
+        cbFn(new NewItemParams(
+            formData.get('title'),
+            formData.get('priority'),
+            formData.get('deadline'),
+            formData.get('note'),
+        ));
     }
 
     let dialogEl = document.getElementById('new-item-dialog');
-    if (!dialogEl) dialogEl = createDialog(cbFn);
+    if (!dialogEl) dialogEl = newItemDialog(handleSubmit);
     dialogEl.showModal();
 
 }
@@ -95,6 +62,8 @@ export class NewItemParams {
     constructor(title, priority, deadline, note) {
         this.title = title;
         this.priority = priority;
+        // new Date(deadline).toISOString() <-- Saving this for later
+        // https://stackoverflow.com/questions/948532/how-to-convert-a-date-to-utc
         this.deadline = deadline;
         this.note = note;
     }

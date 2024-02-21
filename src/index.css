@@ -162,6 +162,16 @@ dialog form input[type="text"] {
     margin-bottom: 1.5rem;
 }
 
+dialog form > * + * {
+    margin-top: 20px;
+}
+
+dialog form fieldset label {
+    display: inline;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
 
 /* Style */
 
@@ -195,6 +205,7 @@ header {
 
 .menu {
     background-color: var(--purple);
+    padding-right: 20px;
 }
 
 .menu button {
