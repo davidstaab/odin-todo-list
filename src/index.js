@@ -40,6 +40,7 @@ function createListsMenu() {
     }
 }
 
+// TODO: Move these create() functions into the View
 function createItemsMenu() {
     const btns = [
         { name: 'new', icon: 'mdi-plus-box-multiple-outline' },

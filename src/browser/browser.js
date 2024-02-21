@@ -1,6 +1,6 @@
 'use strict'
 
-import newItemDialog from './browser-new-item.js';
+import createNewItemDialog from './browser-new-item.js';
 
 /* Design notes:
  * This module should encapsulate all calls to the browser's APIs.
@@ -44,9 +44,8 @@ function displayNewItem(cbFn) {
     }
 
     let dialogEl = document.getElementById('new-item-dialog');
-    if (!dialogEl) dialogEl = newItemDialog(handleSubmit);
+    if (!dialogEl) dialogEl = createNewItemDialog(handleSubmit);
     dialogEl.showModal();
-
 }
 
 function displayNewList() {
@@ -85,6 +84,8 @@ export function createMenuBtn(menuName, btnName, iconName, cbFn) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.classList.add(`${btnName}-btn`);
+    // TODO: This was supposed to be a generic function, but I hard-coded
+    //  the displayNewItem function into it. How to make this generic?
     btn.addEventListener('click', () => displayNewItem(cbFn));
     btn.appendChild(createIconifyIcon(iconName));
     menuDiv.appendChild(btn);
