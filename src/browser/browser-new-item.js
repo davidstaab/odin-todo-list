@@ -2,7 +2,7 @@
 
 /**
  * 
- * @param {Function} submitCb Callback for the submit button
+ * @param {Function} submitCb Callback for the submit action
  * @returns {HTMLElement} Dialog element
  */
 export default function(submitCb) {
@@ -38,7 +38,8 @@ export default function(submitCb) {
     formEl.appendChild(fieldsetEl);
 
     // TODO: How to decouple this module from the model? Use interface classes
-    //   defined in the ViewModel and write abstract code against them?
+    //   defined in the ViewModel and write abstract code against them? That
+    //   creates a circular dependency, though.
     const priorities = [
         { text: 'Normal', value: 0 },
         { text: 'High', value: 1 },
@@ -71,9 +72,17 @@ export default function(submitCb) {
     deadlineDiv.appendChild(deadlineInput);
     formEl.appendChild(deadlineDiv);
 
-
-    //TODO: Add remaining labels and inputs to form:
-    // deadline (date picker), note (textarea) <-- In that order!
+    // 'Note' input
+    const notelabel = document.createElement('label');
+    notelabel.htmlFor = 'new-item-note';
+    notelabel.textContent = 'Note';
+    const noteInput = document.createElement('textarea');
+    noteInput.id = 'new-item-note';
+    noteInput.name = 'note';
+    const noteDiv = document.createElement('div');
+    noteDiv.appendChild(notelabel);
+    noteDiv.appendChild(noteInput);
+    formEl.appendChild(noteDiv);
 
     // 'Submit' button
     const submitBtn = document.createElement('button');

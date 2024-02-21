@@ -1,14 +1,22 @@
 'use strict'
 
+/**
+ * Design notes:
+ * This app follows MVP architecture:
+ *  Presenter: index.js
+ *  View: /browser/
+ *  Model: /model/
+ */
+
 // Webpack imports
 import 'normalize.css'; // npm module, not a file
 import './index.css';
 
-import { PriorityEnum, TodoItem} from './todo/todo.js';
-import TodoList from './todo-list/todo-list.js';
-import ListList from './list-list/list-list.js';
+import { PriorityEnum, TodoItem} from './model/todo/todo.js';
+import TodoList from './model/todo-list/todo-list.js';
+import ListList from './model/list-list/list-list.js';
 import * as UI from './browser/browser.js';
-import * as Store from './store/store.js';
+import * as Store from './model/store/store.js';
 import * as dateFns from 'date-fns';
 
 ///////

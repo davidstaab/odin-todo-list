@@ -23,13 +23,17 @@ export class PriorityEnum {
 
     toString() {
         // NB: Depends on a design where the enum values are public properties
-        for (const key of Object.keys(PriorityEnum)) {
-            if (PriorityEnum[key] === this) {
+        let keys = Object.keys(PriorityEnum);
+        for (const key of keys) {
+            let that = PriorityEnum[key];
+            if (that === this) {
                 return key;
             }
         }
         return null;
     }
+
+    toNumber() { return this.#value };
 }
 
 

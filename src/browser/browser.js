@@ -53,6 +53,9 @@ function displayNewList() {
     // HTML dialog
 }
 
+/**
+ * Data interface for callback to displayNewItem()
+ */
 export class NewItemParams {
     title
     priority
