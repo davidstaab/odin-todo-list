@@ -1,6 +1,7 @@
 'use strict'
 
 import createNewItemDialog from './browser-new-item.js';
+import createNewListDialog from './browser-new-list.js';
 
 /* Design notes:
  * This module should encapsulate all calls to the browser's APIs.
@@ -20,6 +21,18 @@ function createIconifyIcon(name) {
     iconEl.classList.add('iconify');
     iconEl.dataset.icon = name;
     return iconEl;
+}
+
+function createMenuBtn(menuName, btnName, iconName, cbFn) {
+    const menuDiv = document.querySelector(`.${menuName}-area .menu`);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.classList.add(`${btnName}-btn`);
+    // TODO: This was supposed to be a generic function, but I hard-coded
+    //  the displayNewItem function into it. How to make this generic?
+    btn.addEventListener('click', cbFn);
+    btn.appendChild(createIconifyIcon(iconName));
+    menuDiv.appendChild(btn);
 }
 
 /**
@@ -48,8 +61,20 @@ function displayNewItem(cbFn) {
     dialogEl.showModal();
 }
 
-function displayNewList() {
-    // HTML dialog
+function displayNewList(cbFn) {
+    function handleSubmit(e) {
+        if (e.preventDefault) e.preventDefault(); // Prevent HTTP request
+        const dialogEl = e.submitter.closest('dialog');
+        const formEl = e.submitter.closest('form');
+        dialogEl.close();
+        let formData = new FormData(formEl);
+        formEl.reset();
+        cbFn(formData.get('title'));
+    }
+
+    let dialogEl = document.getElementById('new-list-dialog');
+    if (!dialogEl) dialogEl = createNewListDialog(handleSubmit);
+    dialogEl.showModal();
 }
 
 /**
@@ -79,16 +104,14 @@ export function displayListOfLists() {
 
 }
 
-export function createMenuBtn(menuName, btnName, iconName, cbFn) {
-    const menuDiv = document.querySelector(`.${menuName}-area .menu`);
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.classList.add(`${btnName}-btn`);
-    // TODO: This was supposed to be a generic function, but I hard-coded
-    //  the displayNewItem function into it. How to make this generic?
-    btn.addEventListener('click', () => displayNewItem(cbFn));
-    btn.appendChild(createIconifyIcon(iconName));
-    menuDiv.appendChild(btn);
+export function createItemsMenu({ newItemCb }) {
+    const closure = () => displayNewItem(newItemCb);
+    createMenuBtn('items', 'new', 'mdi-plus-box-multiple-outline', closure);
+}
+
+export function createListsMenu({ newListCb }) {
+    const closure = () => displayNewList(newListCb);
+    createMenuBtn('lists', 'new', 'mdi-playlist-plus', closure);
 }
 
 export function removeItem() {

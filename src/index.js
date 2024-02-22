@@ -30,32 +30,11 @@ function save() {
     // Auto-call this on every change
 }
 
-function createListsMenu() {
-    const btns = [
-        { name: 'new', icon: 'mdi-playlist-plus' },
-    ];
-
-    for (let btn of btns) {
-        UI.createMenuBtn('lists', btn.name, btn.icon, handleNewList);
-    }
-}
-
-// TODO: Move these create() functions into the View
-function createItemsMenu() {
-    const btns = [
-        { name: 'new', icon: 'mdi-plus-box-multiple-outline' },
-    ];
-
-    for (let btn of btns) {
-        UI.createMenuBtn('items', btn.name, btn.icon, handleNewItem);
-    }
-}
-
 ////////////
 // Callbacks
 
-function handleNewList(params) {
-
+function handleNewList(name) {
+    console.log(name);
 }
 
 /**
@@ -69,6 +48,6 @@ function handleNewItem(params) {
 ///////
 // Init
 
-createListsMenu();
-createItemsMenu();
+UI.createListsMenu({ newListCb: handleNewList });
+UI.createItemsMenu({ newItemCb: handleNewItem });
 // Load persisted state
