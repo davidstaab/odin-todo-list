@@ -5,7 +5,7 @@
  * @param {Function} submitCb Callback for the submit action
  * @returns {HTMLElement} Dialog element
  */
-export default function(submitCb) {
+export default function createNewListDialog(submitCb) {
     const dialogEl = document.createElement('dialog');
     dialogEl.id = 'new-list-dialog';
 

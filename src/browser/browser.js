@@ -2,6 +2,10 @@
 
 import createNewItemDialog from './browser-new-item.js';
 import createNewListDialog from './browser-new-list.js';
+import createItemCard from './browser-item-card.js';
+import { NewItemParams, PriorityAttrs, createIconifyIcon } from './browser-lib.js';
+import { PriorityEnum } from '../lib/lib.js';
+import * as DateFns from "date-fns";
 
 /* Design notes:
  * This module should encapsulate all calls to the browser's APIs.
@@ -9,19 +13,6 @@ import createNewListDialog from './browser-new-list.js';
  * It can export interface classes and functions to the ViewModel (index).
  *   These form the contract between View and ViewModel.
  */
-
-
-/**
- * 
- * @param {string} name Name of the Iconify icon to be used
- * @returns {HTMLElement} Span
- */
-function createIconifyIcon(name) {
-    const iconEl = document.createElement('span');
-    iconEl.classList.add('iconify');
-    iconEl.dataset.icon = name;
-    return iconEl;
-}
 
 function createMenuBtn(menuName, btnName, iconName, cbFn) {
     const menuDiv = document.querySelector(`.${menuName}-area .menu`);
@@ -39,7 +30,7 @@ function createMenuBtn(menuName, btnName, iconName, cbFn) {
  * 
  * @param {Function} cbFn Callback for form submit
  */
-function displayNewItem(cbFn) {
+function displayNewItemDialog(cbFn) {
 
     function handleSubmit(e) {
         if (e.preventDefault) e.preventDefault(); // Prevent HTTP request
@@ -50,7 +41,7 @@ function displayNewItem(cbFn) {
         formEl.reset();
         cbFn(new NewItemParams(
             formData.get('title'),
-            formData.get('priority'),
+            Number(formData.get('priority')),
             formData.get('deadline'),
             formData.get('note'),
         ));
@@ -61,7 +52,7 @@ function displayNewItem(cbFn) {
     dialogEl.showModal();
 }
 
-function displayNewList(cbFn) {
+function displayNewListDialog(cbFn) {
     function handleSubmit(e) {
         if (e.preventDefault) e.preventDefault(); // Prevent HTTP request
         const dialogEl = e.submitter.closest('dialog');
@@ -77,25 +68,6 @@ function displayNewList(cbFn) {
     dialogEl.showModal();
 }
 
-/**
- * Data interface for callback to displayNewItem()
- */
-export class NewItemParams {
-    title
-    priority
-    deadline
-    note
-    
-    constructor(title, priority, deadline, note) {
-        this.title = title;
-        this.priority = priority;
-        // new Date(deadline).toISOString() <-- Saving this for later
-        // https://stackoverflow.com/questions/948532/how-to-convert-a-date-to-utc
-        this.deadline = deadline;
-        this.note = note;
-    }
-}
-
 export function displayListOfItems() {
 
 }
@@ -105,12 +77,12 @@ export function displayListOfLists() {
 }
 
 export function createItemsMenu({ newItemCb }) {
-    const closure = () => displayNewItem(newItemCb);
+    const closure = () => displayNewItemDialog(newItemCb);
     createMenuBtn('items', 'new', 'mdi-plus-box-multiple-outline', closure);
 }
 
 export function createListsMenu({ newListCb }) {
-    const closure = () => displayNewList(newListCb);
+    const closure = () => displayNewListDialog(newListCb);
     createMenuBtn('lists', 'new', 'mdi-playlist-plus', closure);
 }
 
@@ -118,8 +90,13 @@ export function removeItem() {
 
 }
 
-export function addItem() {
-
+/**
+ * 
+ * @param {NewItemParams} params 
+ */
+export function addItem(params) {
+    const listEl = document.querySelector('.items-list');
+    listEl.appendChild(createItemCard(params));
 }
 
 export function removeList() {

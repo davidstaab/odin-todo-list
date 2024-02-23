@@ -1,7 +1,8 @@
 'use strict'
 
 import * as dateFns from 'date-fns';
-import { PriorityEnum, TodoItem } from '../todo/todo.js';
+import { TodoItem } from '../todo/todo.js';
+import { PriorityEnum } from '../../lib/lib.js';
 
 export default class TodoList {
     #items

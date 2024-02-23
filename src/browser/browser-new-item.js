@@ -1,11 +1,13 @@
 'use strict'
 
+import * as DateFns from 'date-fns';
+
 /**
  * 
  * @param {Function} submitCb Callback for the submit action
  * @returns {HTMLElement} Dialog element
  */
-export default function(submitCb) {
+export default function createNewItemDialog(submitCb) {
     const dialogEl = document.createElement('dialog');
     dialogEl.id = 'new-item-dialog';
 
@@ -41,7 +43,7 @@ export default function(submitCb) {
     //   defined in the ViewModel and write abstract code against them? That
     //   creates a circular dependency, though.
     const priorities = [
-        { text: 'Normal', value: 0 },
+        { text: 'Normal', value: 0, default: true },
         { text: 'High', value: 1 },
         { text: 'Highest', value: 2 },
     ];
@@ -52,6 +54,7 @@ export default function(submitCb) {
         radioEl.name = 'priority';
         radioEl.id = `new-item-priority-${item.text}`;
         radioEl.value = String(item.value);
+        if (item.default) radioEl.checked = item.default;
         fieldsetEl.appendChild(radioEl);
         const radioLabel = document.createElement('label');
         radioLabel.htmlFor = `new-item-priority-${item.text}`;
@@ -67,6 +70,7 @@ export default function(submitCb) {
     deadlineInput.type = 'date';
     deadlineInput.id = 'new-item-deadline';
     deadlineInput.name = 'deadline';
+    deadlineInput.value = DateFns.format(new Date(), 'yyyy-MM-dd');
     const deadlineDiv = document.createElement('div');
     deadlineDiv.appendChild(deadlineLabel);
     deadlineDiv.appendChild(deadlineInput);
@@ -84,11 +88,23 @@ export default function(submitCb) {
     noteDiv.appendChild(noteInput);
     formEl.appendChild(noteDiv);
 
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.classList.add('buttons');
+    formEl.appendChild(buttonsDiv);
+
     // 'Submit' button
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
-    formEl.appendChild(submitBtn);
+    submitBtn.textContent = 'Create';
+    buttonsDiv.appendChild(submitBtn);
     formEl.addEventListener('submit', submitCb);
+
+    // 'Cancel' button
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.addEventListener('click', () => dialogEl.close());
+    buttonsDiv.appendChild(cancelBtn);
 
     document.body.appendChild(dialogEl);
     return dialogEl;

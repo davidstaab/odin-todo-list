@@ -12,7 +12,8 @@
 import 'normalize.css'; // npm module, not a file
 import './index.css';
 
-import { PriorityEnum, TodoItem} from './model/todo/todo.js';
+import { TodoItem } from './model/todo/todo.js';
+import { PriorityEnum } from './lib/lib.js';
 import TodoList from './model/todo-list/todo-list.js';
 import ListList from './model/list-list/list-list.js';
 import * as UI from './browser/browser.js';
@@ -43,6 +44,7 @@ function handleNewList(name) {
  */
 function handleNewItem(params) {
     console.dir(params);
+    UI.addItem(params);
 }
 
 ///////
