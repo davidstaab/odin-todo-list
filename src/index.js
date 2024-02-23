@@ -117,13 +117,22 @@ function handleListSelected(name) {
     // UI.displayListOfItems(items)
 }
 
+function handleListRemoved(name, wasSelected) {
+    console.log(`Removed list ${name}`);
+    // TODO: Remove list and its items from model
+    // if (wasSelected) // TODO: Get first list in model, selectUILIst()
+}
+
 
 ///////
 // Init
 
 // Convenience functions for DRY principle
 const selectUIList = UI.selectList.bind(null, { selected: handleListSelected });
-const addUIList = UI.addList.bind(null, { selected: handleListSelected });
+const addUIList = UI.addList.bind(null, { 
+    selected: handleListSelected,
+    removed: handleListRemoved,
+});
 
 UI.createListsMenu({ newList: handleNewList });
 UI.createItemsMenu({ newItem: handleNewItem });

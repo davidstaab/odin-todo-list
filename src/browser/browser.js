@@ -3,17 +3,9 @@
 import { createNewItemDialog, initNewItemDialog } from './browser-new-item.js';
 import createNewListDialog from './browser-new-list.js';
 import createItemCard from './browser-item-card.js';
-import { TodoItemParams, PriorityAttrs, createIconifyIcon } from './browser-lib.js';
-import { PriorityEnum } from '../lib/lib.js';
-import * as DateFns from "date-fns";
-import { TodoItem } from '../model/todo/todo.js';
+import { TodoItemParams, createIconifyIcon } from './browser-lib.js';
 
-/* Design notes:
- * This module should encapsulate all calls to the browser's APIs.
- *   So DOM calls, event handlers, etc. all stay in here.
- * It can export interface classes and functions to the ViewModel (index).
- *   These form the contract between View and ViewModel.
- */
+const REMOVE_ICON = 'mdi-close';
 
 function createMenuBtn(menuName, btnName, iconName, cbFn) {
     const menuDiv = document.querySelector(`.${menuName}-area .menu`);
@@ -68,6 +60,16 @@ function displayNewListDialog(cbFn) {
     let dialogEl = document.getElementById('new-list-dialog');
     if (!dialogEl) dialogEl = createNewListDialog(handleSubmit);
     dialogEl.showModal();
+}
+
+function isListSelected(name) {
+    const lists = document.querySelectorAll('.list-card');
+    lists.forEach((card) => {
+        if (card.dataset.name === name) {
+            return card.classList.contains('selected')
+        }
+    });
+    return false;
 }
 
 /**
@@ -131,6 +133,7 @@ export function displayListOfItems(items) {
  * 
  * @param {Object} callbacks 
  * @param {Function} callbacks.selected
+ * @param {Function} callbacks.removed
  * @param {String} name 
  */
 export function addList(callbacks, name) {
@@ -141,14 +144,44 @@ export function addList(callbacks, name) {
     const titleEl = document.createElement('h2');
     titleEl.textContent = name;
     listCard.appendChild(titleEl);
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    const removeBtnIcon = createIconifyIcon(REMOVE_ICON);
+    removeBtn.appendChild(removeBtnIcon);
+
+    removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        removeList({ removed: callbacks.removed }, name);
+    });
+    listCard.appendChild(removeBtn);
+
     listCard.addEventListener('click', () => {
         selectList({ selected: callbacks.selected }, name);
     });
     listsList.appendChild(listCard);
 }
 
-export function removeList() {
+/**
+ * 
+ * @param {Object} callbacks 
+ * @param {Function} callbacks.removed
+ * @param {String} name 
+ */
+export function removeList(callbacks, name) {
+    const listCards = document.querySelectorAll('.list-card');
 
+    let index = -1;
+    for (let i = 0; i < listCards.length; i++) {
+        if (listCards[i].dataset.name === name) {
+            index = i;
+            break;
+        }
+    }
+    
+    if (index < 0) throw new Error(`List name ${name} was not found.`);
+    const wasSelected = isListSelected(name);
+    listCards[index].remove();
+    callbacks.removed(name, wasSelected);
 }
 
 /**
