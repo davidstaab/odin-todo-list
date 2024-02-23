@@ -15,9 +15,9 @@ export function createIconifyIcon(name) {
 
 
 /**
- * Data interface
+ * Data interface. Converts string inputs to values needed by Presenter layer.
  */
-export class NewItemParams {
+export class TodoItemParams {
     title
     priority
     deadline
@@ -54,7 +54,7 @@ export class NewItemParams {
     #sanitizeDeadline(str) {
         const YYYYMMdd = /^(\d{4}-\d{2}-\d{2})/;
         if (!YYYYMMdd.test(str)) {
-            throw new Error(`${str} does not contain the YYYY-MM-dd format.`);
+            throw new Error(`"${str}" does not contain a YYYY-MM-dd substring.`);
         }
         return str.match(YYYYMMdd)[0];
     }

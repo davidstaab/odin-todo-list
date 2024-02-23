@@ -1,11 +1,12 @@
 'use strict'
 
-import createNewItemDialog from './browser-new-item.js';
+import { createNewItemDialog, initNewItemDialog } from './browser-new-item.js';
 import createNewListDialog from './browser-new-list.js';
 import createItemCard from './browser-item-card.js';
-import { NewItemParams, PriorityAttrs, createIconifyIcon } from './browser-lib.js';
+import { TodoItemParams, PriorityAttrs, createIconifyIcon } from './browser-lib.js';
 import { PriorityEnum } from '../lib/lib.js';
 import * as DateFns from "date-fns";
+import { TodoItem } from '../model/todo/todo.js';
 
 /* Design notes:
  * This module should encapsulate all calls to the browser's APIs.
@@ -39,7 +40,7 @@ function displayNewItemDialog(cbFn) {
         dialogEl.close();
         let formData = new FormData(formEl);
         formEl.reset();
-        cbFn(new NewItemParams(
+        cbFn(new TodoItemParams(
             formData.get('title'),
             Number(formData.get('priority')),
             formData.get('deadline'),
@@ -49,6 +50,7 @@ function displayNewItemDialog(cbFn) {
 
     let dialogEl = document.getElementById('new-item-dialog');
     if (!dialogEl) dialogEl = createNewItemDialog(handleSubmit);
+    initNewItemDialog();
     dialogEl.showModal();
 }
 
@@ -86,17 +88,28 @@ export function createListsMenu({ newListCb }) {
     createMenuBtn('lists', 'new', 'mdi-playlist-plus', closure);
 }
 
-export function removeItem() {
-
+/**
+ * Removes an item (card) from the items list
+ * @param {Number} index
+ */
+export function removeItem(index) {
+    Array.from(document.querySelectorAll('.item-card'))[index].remove();
 }
 
 /**
- * 
- * @param {NewItemParams} params 
+ * Adds an item (card) to the items list
+ * @param {Number} hash
+ * @param {TodoItemParams} params 
+ * @param {Object} callbacks
+ * @param {Function} callbacks.remove
  */
-export function addItem(params) {
+export function addItem(hash, params, callbacks) {
+    const removeClickClosure = (e) => {
+        const cardHash = Number(e.target.closest('.item-card').dataset.hash);
+        callbacks.remove(cardHash);
+    };
     const listEl = document.querySelector('.items-list');
-    listEl.appendChild(createItemCard(params));
+    listEl.appendChild(createItemCard(hash, params, { remove: removeClickClosure }));
 }
 
 export function removeList() {

@@ -1,14 +1,20 @@
-import { NewItemParams, PriorityAttrs, createIconifyIcon } from "./browser-lib.js";
+import { TodoItemParams, PriorityAttrs, createIconifyIcon } from "./browser-lib.js";
+
+const REMOVE_ICON = 'mdi-close';
 
 /**
- * 
- * @param {NewItemParams} params 
- * @returns 
+ * Creates a new card for a todo item
+ * @param {Number} hash A hash provided by the item registry
+ * @param {TodoItemParams} params Parameters defining the todo item
+ * @param {Object} callbacks
+ * @param {Function} callbacks.remove Callback for remove button
+ * @returns {HTMLElement} The card
  */
-export default function createItemCard(params) {
+export default function createItemCard(hash, params, callbacks) {
     // Card
     const cardEl = document.createElement('div');
     cardEl.classList.add('item-card');
+    cardEl.dataset.hash = hash;
 
     // Title + Priority
     const titleEl = document.createElement('h2');
@@ -38,6 +44,16 @@ export default function createItemCard(params) {
     noteEl.classList.add('description');
     noteEl.textContent = params.note;
     cardEl.appendChild(noteEl);
+
+    // Buttons
+    const buttonsDiv = document.createElement('div');
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    const removeIcon = createIconifyIcon(REMOVE_ICON);
+    removeBtn.appendChild(removeIcon);
+    removeBtn.addEventListener('click', callbacks.remove);
+    buttonsDiv.appendChild(removeBtn);
+    cardEl.appendChild(buttonsDiv);
 
     return cardEl;
 }

@@ -30,3 +30,21 @@ export class PriorityEnum {
 
     toNumber() { return this.#value };
 }
+
+/**
+ * Generates a 32-bit numeric hash code from the string
+ * @returns {Number} hash code
+ */
+export function hash(str) {
+    // https://stackoverflow.com/a/7616484/2539684
+    // CC-BY-SA 4.0
+    var hash = 0,
+      i, chr;
+    if (str.length === 0) return hash;
+    for (i = 0; i < str.length; i++) {
+      chr = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  }
