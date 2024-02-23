@@ -78,11 +78,16 @@ function save() {
     // Auto-call this on every change
 }
 
+
 ////////////
 // Callbacks
 
 function handleNewList(name) {
-    console.log(name);
+    addUIList(name);
+    // TODO: Add list to model
+
+    // This fires handleListSelected(), which displays the items
+    selectUIList(name); 
 }
 
 /**
@@ -106,10 +111,24 @@ function handleRemoveItem(hash) {
     registry.unregister(hash);
 }
 
+function handleListSelected(name) {
+    console.log(`Selected ${name} list`);
+    // TODO: Query items from model
+    // UI.displayListOfItems(items)
+}
+
+
 ///////
 // Init
 
-UI.createListsMenu({ newListCb: handleNewList });
-UI.createItemsMenu({ newItemCb: handleNewItem });
+// Convenience functions for DRY principle
+const selectUIList = UI.selectList.bind(null, { selected: handleListSelected });
+const addUIList = UI.addList.bind(null, { selected: handleListSelected });
+
+UI.createListsMenu({ newList: handleNewList });
+UI.createItemsMenu({ newItem: handleNewItem });
 const registry = new TodoRegistry();
+
 // TODO: Load persisted state
+addUIList('Default');
+// TODO: UI.selectList

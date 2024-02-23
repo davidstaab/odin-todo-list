@@ -70,30 +70,14 @@ function displayNewListDialog(cbFn) {
     dialogEl.showModal();
 }
 
-export function displayListOfItems() {
-
-}
-
-export function displayListOfLists() {
-
-}
-
-export function createItemsMenu({ newItemCb }) {
-    const closure = () => displayNewItemDialog(newItemCb);
-    createMenuBtn('items', 'new', 'mdi-plus-box-multiple-outline', closure);
-}
-
-export function createListsMenu({ newListCb }) {
-    const closure = () => displayNewListDialog(newListCb);
-    createMenuBtn('lists', 'new', 'mdi-playlist-plus', closure);
-}
-
 /**
- * Removes an item (card) from the items list
- * @param {Number} index
+ * 
+ * @param {Object} callbacks 
+ * @param {Function} callbacks.newItem
  */
-export function removeItem(index) {
-    Array.from(document.querySelectorAll('.item-card'))[index].remove();
+export function createItemsMenu(callbacks) {
+    const closure = () => displayNewItemDialog(callbacks.newItem);
+    createMenuBtn('items', 'new', 'mdi-plus-box-multiple-outline', closure);
 }
 
 /**
@@ -112,10 +96,76 @@ export function addItem(hash, params, callbacks) {
     listEl.appendChild(createItemCard(hash, params, { remove: removeClickClosure }));
 }
 
+/**
+ * Removes an item (card) from the items list
+ * @param {Number} index
+ */
+export function removeItem(index) {
+    Array.from(document.querySelectorAll('.item-card'))[index].remove();
+}
+
+/**
+ * 
+ * @param {Object} callbacks 
+ * @param {Function} callbacks.newList
+ */
+export function createListsMenu(callbacks) {
+    const closure = () => displayNewListDialog(callbacks.newList);
+    createMenuBtn('lists', 'new', 'mdi-playlist-plus', closure);
+}
+
+/**
+ * Replaces current item cards with new set of cards
+ * @param {Object[]} items
+ * @param {Number} items[].hash
+ * @param {TodoItemParams} items[].params
+ * @param {Object} items[].callbacks
+ * @param {Function} items[].callbacks.remove
+ */
+export function displayListOfItems(items) {
+    document.querySelectorAll('.item-card').forEach(item => item.remove());
+    items.forEach(item => addItem(item.hash, item.params, item.callbacks));
+}
+
+/**
+ * 
+ * @param {Object} callbacks 
+ * @param {Function} callbacks.selected
+ * @param {String} name 
+ */
+export function addList(callbacks, name) {
+    const listsList = document.querySelector('.lists-list');
+    const listCard = document.createElement('div');
+    listCard.classList.add('list-card');
+    listCard.dataset.name = name;
+    const titleEl = document.createElement('h2');
+    titleEl.textContent = name;
+    listCard.appendChild(titleEl);
+    listCard.addEventListener('click', () => {
+        selectList({ selected: callbacks.selected }, name);
+    });
+    listsList.appendChild(listCard);
+}
+
 export function removeList() {
 
 }
 
-export function addList() {
+/**
+ * 
+ * @param {Object} callbacks 
+ * @param {Function} callbacks.selected
+ * @param {String} name 
+ */
+export function selectList(callbacks, name) {
+    const listCards = document.querySelectorAll('.list-card');
 
+    for (let card of listCards) {
+        if (card.dataset.name === name) {
+            card.classList.add('selected');
+        } else {
+            card.classList.remove('selected');
+        }
+    }
+    callbacks.selected(name);
 }
