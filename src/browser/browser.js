@@ -7,13 +7,18 @@ import { TodoItemParams, createIconifyIcon } from './browser-lib.js';
 
 const REMOVE_ICON = 'mdi-close';
 
+/**
+ * 
+ * @param {String} menuName 
+ * @param {String} btnName 
+ * @param {String} iconName 
+ * @param {Function} cbFn Callback for button click event
+ */
 function createMenuBtn(menuName, btnName, iconName, cbFn) {
     const menuDiv = document.querySelector(`.${menuName}-area .menu`);
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.classList.add(`${btnName}-btn`);
-    // TODO: This was supposed to be a generic function, but I hard-coded
-    //  the displayNewItem function into it. How to make this generic?
     btn.addEventListener('click', cbFn);
     btn.appendChild(createIconifyIcon(iconName));
     menuDiv.appendChild(btn);
@@ -21,7 +26,7 @@ function createMenuBtn(menuName, btnName, iconName, cbFn) {
 
 /**
  * 
- * @param {Function} cbFn Callback for form submit
+ * @param {Function} cbFn Callback for form submit event
  */
 function displayNewItemDialog(cbFn) {
 
@@ -46,6 +51,10 @@ function displayNewItemDialog(cbFn) {
     dialogEl.showModal();
 }
 
+/**
+ * 
+ * @param {Function} cbFn Callback for form submit event
+ */
 function displayNewListDialog(cbFn) {
     function handleSubmit(e) {
         if (e.preventDefault) e.preventDefault(); // Prevent HTTP request
@@ -62,6 +71,11 @@ function displayNewListDialog(cbFn) {
     dialogEl.showModal();
 }
 
+/**
+ * 
+ * @param {String} name 
+ * @returns {Boolean}
+ */
 function isListSelected(name) {
     const lists = document.querySelectorAll('.list-card');
     lists.forEach((card) => {
@@ -150,7 +164,7 @@ export function addList(callbacks, name) {
     removeBtn.appendChild(removeBtnIcon);
 
     removeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+        e.stopPropagation(); // Prevent click event on .list-card
         removeList({ removed: callbacks.removed }, name);
     });
     listCard.appendChild(removeBtn);
