@@ -11,15 +11,10 @@
 // Webpack imports
 import 'normalize.css'; // npm module, not a file
 import './index.css';
-
-import { TodoItem } from './model/todo/todo.js';
-import { PriorityEnum } from './lib/lib.js';
-import TodoList from './model/todo-list/todo-list.js';
-import ListList from './model/list-list/list-list.js';
+import * as Model from './model/model.js';
 import * as UI from './browser/browser.js';
-import * as UILib from './browser/browser-lib.js';
 import * as Lib from './lib/lib.js';
-import * as Store from './model/store/store.js';
+import * as Store from './store/store.js';
 import * as dateFns from 'date-fns';
 
 ///////
@@ -48,7 +43,7 @@ class TodoRegistry {
 
     /**
      * 
-     * @param {UILib.TodoItemParams} params 
+     * @param {UI.TodoItemParams} params 
      * @returns {Number} Hash of stringified params
      */
     register(params) {
@@ -70,19 +65,11 @@ class TodoRegistry {
     }
 }
 
-function load() {
-
-}
-
-function save() {
-    // Auto-call this on every change
-}
-
 
 ////////////
 // Callbacks
 
-function handleNewList(name) {
+function handleListCreated(name) {
     addUIList(name);
     // TODO: Add list to model
 
@@ -92,9 +79,9 @@ function handleNewList(name) {
 
 /**
  * 
- * @param {UILib.TodoItemParams} params 
+ * @param {UI.TodoItemParams} params 
  */
-function handleNewItem(params) {
+function handleItemCreated(params) {
     console.dir(params);
     // TODO: Add item to model
     const hash = registry.register(params);
@@ -134,8 +121,8 @@ const addUIList = UI.addList.bind(null, {
     removed: handleListRemoved,
 });
 
-UI.createListsMenu({ newList: handleNewList });
-UI.createItemsMenu({ newItem: handleNewItem });
+UI.createListsMenu({ listCreated: handleListCreated });
+UI.createItemsMenu({ itemCreated: handleItemCreated });
 const registry = new TodoRegistry();
 
 // TODO: Load persisted state

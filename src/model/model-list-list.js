@@ -1,6 +1,6 @@
 'use strict'
 
-import { TodoList } from "../todo-list/todo-list.js";
+import { TodoList } from "./model-todo-list.js";
 
 export default class ListList {
     #lists

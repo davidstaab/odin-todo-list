@@ -2,8 +2,9 @@
 
 import * as safeJS from 'safejslib';
 import * as dateFns from 'date-fns';
-import { PriorityEnum } from '../../lib/lib.js';
-export class TodoItem {
+import { PriorityEnum } from '../lib/lib.js';
+
+export default class TodoItem {
     #title
     #note
     #priority

@@ -5,6 +5,8 @@ import createNewListDialog from './browser-new-list.js';
 import createItemCard from './browser-item-card.js';
 import { TodoItemParams, createIconifyIcon } from './browser-lib.js';
 
+export { TodoItemParams } from './browser-lib.js';
+
 const REMOVE_ICON = 'mdi-close';
 
 /**
@@ -26,9 +28,10 @@ function createMenuBtn(menuName, btnName, iconName, cbFn) {
 
 /**
  * 
- * @param {Function} cbFn Callback for form submit event
+ * @param {Object} callbacks
+ * @param {Function} callbacks.itemCreated
  */
-function displayNewItemDialog(cbFn) {
+function displayNewItemDialog(callbacks) {
 
     function handleSubmit(e) {
         if (e.preventDefault) e.preventDefault(); // Prevent HTTP request
@@ -37,7 +40,7 @@ function displayNewItemDialog(cbFn) {
         dialogEl.close();
         let formData = new FormData(formEl);
         formEl.reset();
-        cbFn(new TodoItemParams(
+        callbacks.itemCreated(new TodoItemParams(
             formData.get('title'),
             Number(formData.get('priority')),
             formData.get('deadline'),
@@ -53,9 +56,10 @@ function displayNewItemDialog(cbFn) {
 
 /**
  * 
- * @param {Function} cbFn Callback for form submit event
+ * @param {Object} callbacks
+ * @param {Function} callbacks.listCreated
  */
-function displayNewListDialog(cbFn) {
+function displayNewListDialog(callbacks) {
     function handleSubmit(e) {
         if (e.preventDefault) e.preventDefault(); // Prevent HTTP request
         const dialogEl = e.submitter.closest('dialog');
@@ -63,7 +67,7 @@ function displayNewListDialog(cbFn) {
         dialogEl.close();
         let formData = new FormData(formEl);
         formEl.reset();
-        cbFn(formData.get('title'));
+        callbacks.listCreated(formData.get('title'));
     }
 
     let dialogEl = document.getElementById('new-list-dialog');
@@ -80,7 +84,7 @@ function isListSelected(name) {
     const lists = document.querySelectorAll('.list-card');
     lists.forEach((card) => {
         if (card.dataset.name === name) {
-            return card.classList.contains('selected')
+            return card.classList.contains('selected');
         }
     });
     return false;
@@ -88,11 +92,24 @@ function isListSelected(name) {
 
 /**
  * 
+ * @returns {String} List name
+ */
+export function getSelectedList() {
+    const lists = document.querySelectorAll('.list-card');
+    lists.forEach((card) => {
+        if (card.classList.contains('selected')) {
+            return card.dataset.name;
+        }
+    });
+}
+
+/**
+ * 
  * @param {Object} callbacks 
- * @param {Function} callbacks.newItem
+ * @param {Function} callbacks.itemCreated
  */
 export function createItemsMenu(callbacks) {
-    const closure = () => displayNewItemDialog(callbacks.newItem);
+    const closure = () => displayNewItemDialog(callbacks);
     createMenuBtn('items', 'new', 'mdi-plus-box-multiple-outline', closure);
 }
 
@@ -123,10 +140,10 @@ export function removeItem(index) {
 /**
  * 
  * @param {Object} callbacks 
- * @param {Function} callbacks.newList
+ * @param {Function} callbacks.listCreated
  */
 export function createListsMenu(callbacks) {
-    const closure = () => displayNewListDialog(callbacks.newList);
+    const closure = () => displayNewListDialog(callbacks);
     createMenuBtn('lists', 'new', 'mdi-playlist-plus', closure);
 }
 
