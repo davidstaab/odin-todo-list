@@ -1,23 +1,24 @@
 'use strict'
 
 import * as dateFns from 'date-fns';
-import { TodoItem } from './model-todo.js';
+import TodoItem from './model-todo.js';
 import { PriorityEnum } from '../lib/lib.js';
 
 export default class TodoList {
-    #items
-    name
+    #items = []
+    name = ''
 
     /**
      * @constructor
      * @param {Object[]} items Items to pre-load the list with
      */
-    constructor(name = 'default', items = []) {
+    constructor(name, items = []) {
         if (!(typeof name === 'string')) throw new Error('Name must be a string.');
         if (name === '') throw new Error('Name cannot be empty.');
         if (!Array.isArray(items)) throw new Error('Argument is not an array of todo items.');
         this.name = name;
         this.#items = items;
+        return this;
     }
 
     /**

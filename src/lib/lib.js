@@ -1,3 +1,5 @@
+export const DEFAULT_LIST_NAME = 'Default';
+
 /**
  * @readonly
  * @enum {number}
@@ -16,7 +18,7 @@ export class PriorityEnum {
         this.#value = value;
     }
 
-    toString() {
+    get asString() {
         // NB: Depends on a design where the enum values are public properties
         let keys = Object.keys(PriorityEnum);
         for (const key of keys) {
@@ -28,7 +30,7 @@ export class PriorityEnum {
         return null;
     }
 
-    toNumber() { return this.#value };
+    get asNumber() { return this.#value };
 }
 
 /**

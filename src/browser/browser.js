@@ -165,9 +165,11 @@ export function displayListOfItems(items) {
  * @param {Object} callbacks 
  * @param {Function} callbacks.selected
  * @param {Function} callbacks.removed
- * @param {String} name 
+ * @param {String} name
+ * @param {Object} options
+ * @param {Boolean} options.deleteBtn Do not add a button to delete the card
  */
-export function addList(callbacks, name) {
+export function addList(callbacks, name, { deleteBtn = true } = {}) {
     const listsList = document.querySelector('.lists-list');
     const listCard = document.createElement('div');
     listCard.classList.add('list-card');
@@ -175,16 +177,19 @@ export function addList(callbacks, name) {
     const titleEl = document.createElement('h2');
     titleEl.textContent = name;
     listCard.appendChild(titleEl);
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    const removeBtnIcon = createIconifyIcon(REMOVE_ICON);
-    removeBtn.appendChild(removeBtnIcon);
+    
+    if (deleteBtn) {
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        const removeBtnIcon = createIconifyIcon(REMOVE_ICON);
+        removeBtn.appendChild(removeBtnIcon);
 
-    removeBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent click event on .list-card
-        removeList({ removed: callbacks.removed }, name);
-    });
-    listCard.appendChild(removeBtn);
+        removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent click event on .list-card
+            removeList({ removed: callbacks.removed }, name);
+        });
+        listCard.appendChild(removeBtn);
+    }
 
     listCard.addEventListener('click', () => {
         selectList({ selected: callbacks.selected }, name);

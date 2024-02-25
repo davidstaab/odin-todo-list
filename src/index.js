@@ -11,11 +11,15 @@
 // Webpack imports
 import 'normalize.css'; // npm module, not a file
 import './index.css';
+
 import * as Model from './model/model.js';
 import * as UI from './browser/browser.js';
 import * as Lib from './lib/lib.js';
 import * as Store from './store/store.js';
 import * as dateFns from 'date-fns';
+
+
+
 
 ///////
 // Utils
@@ -35,10 +39,10 @@ import * as dateFns from 'date-fns';
  * the view's state (but they wouldn't be as loosely coupled).
  */
 class TodoRegistry {
-    #items = []
+    #hashes = []
 
     constructor() {
-        this.#items = [];
+        this.#hashes = [];
     }
 
     /**
@@ -50,19 +54,52 @@ class TodoRegistry {
         const str = Object.values(params)
             .reduce((prev, curr) => prev += String(curr), '');
         const hashed = Lib.hash(str);
-        this.#items.push(hashed);
+        this.#hashes.push(hashed);
         return hashed;
     }
 
     unregister(hash) {
-        let idx = this.#items.findIndex(val => val === hash);
+        let idx = this.#hashes.findIndex(val => val === hash);
         if (idx < 0) throw new Error(`${hash} not found in registry.`);
-        this.#items.splice(idx, 1);
+        this.#hashes.splice(idx, 1);
+    }
+
+    flush() {
+        this.#hashes = [];
     }
 
     findIdx(hash) {
-        return this.#items.findIndex(val => val === hash);
+        return this.#hashes.findIndex(val => val === hash);
     }
+
+    get hashes() { return this.#hashes };
+}
+
+/**
+ * 
+ * @param {String} title 
+ * @param {Lib.PriorityEnum} priority 
+ * @param {String} deadline YYYY-MM-dd format
+ * @param {String} note 
+ */
+function addTodoItem(title, priority, deadline, note) {
+    // TODO: Compare and align the types of TodoItemParams and this function's signature
+    const params = new UI.TodoItemParams(title, priority.asNumber, deadline, note);
+    const hash = registry.register(params); // Add to Registry
+    UI.addItem(hash, params, { remove: handleRemoveItem }); // Add to UI
+    listOfLists.getListByName(UI.getSelectedList()).add(new Model.TodoItem(
+        params.title,
+        params.priority,
+        params.deadline,
+        params.note,
+    )); // Add to Model
+}
+
+function removeTodoItem(hash) {
+    const idx = registry.findIdx(hash);
+    listOfLists.getListByName(UI.getSelectedList()).remove(idx); // Remove from Model
+    UI.removeItem(idx); // Remove from UI
+    registry.unregister(hash); // Remove from Registry
 }
 
 
@@ -82,10 +119,7 @@ function handleListCreated(name) {
  * @param {UI.TodoItemParams} params 
  */
 function handleItemCreated(params) {
-    console.dir(params);
-    // TODO: Add item to model
-    const hash = registry.register(params);
-    UI.addItem(hash, params, { remove: handleRemoveItem });
+    addTodoItem(params.title, params.priority, params.deadline, params.note);
 }
 
 /**
@@ -93,9 +127,7 @@ function handleItemCreated(params) {
  * @param {Number} hash 
  */
 function handleRemoveItem(hash) {
-    const idx = registry.findIdx(hash);
-    UI.removeItem(idx);
-    registry.unregister(hash);
+    removeTodoItem(hash);
 }
 
 function handleListSelected(name) {
@@ -125,6 +157,16 @@ UI.createListsMenu({ listCreated: handleListCreated });
 UI.createItemsMenu({ itemCreated: handleItemCreated });
 const registry = new TodoRegistry();
 
-// TODO: Load persisted state
-addUIList('Default');
-// TODO: UI.selectList
+// TODO: Load persisted state, create items and lists from it
+const defaultList = new Model.TodoList(Lib.DEFAULT_LIST_NAME);
+const listOfLists = new Model.ListList([defaultList]).sortAsc();
+
+for (let list of listOfLists.lists) { 
+    addUIList(list.name, { deleteBtn: list.name !== Lib.DEFAULT_LIST_NAME });
+}
+selectUIList(Lib.DEFAULT_LIST_NAME);
+
+let selectedListName = UI.getSelectedList();
+for (let todo of listOfLists.getListByName(selectedListName).items) {
+    addTodoItem(todo.title, todo.priority, todo.deadline, todo.note);
+}

@@ -33,6 +33,8 @@ export default class TodoItem {
         this.deadline = deadline;
         this.priority = priority;
         this.note = note;
+
+        return this;
     }
 
     /**

@@ -19,7 +19,7 @@ export default function createItemCard(hash, params, callbacks) {
     // Title + Priority
     const titleEl = document.createElement('h2');
     titleEl.classList.add('title');
-    let icon = PriorityAttrs[params.priority.toString()].dataIcon;
+    let icon = PriorityAttrs[params.priority.asString].dataIcon;
     const priorityEl = createIconifyIcon(icon);
     priorityEl.classList.add('priority');
     PriorityAttrs.applyStyle(priorityEl, params.priority);
@@ -33,7 +33,7 @@ export default function createItemCard(hash, params, callbacks) {
     const textNode1 = document.createTextNode('Due on ');
     const dateEl = document.createElement('span');
     dateEl.classList.add('date');
-    dateEl.textContent = params.deadline;
+    dateEl.textContent = params.deadlineDisplay;
     // TODO: Apply style based on proximity to Date.now()
     deadlineEl.appendChild(textNode1);
     deadlineEl.appendChild(dateEl);

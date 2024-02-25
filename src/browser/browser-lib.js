@@ -15,19 +15,19 @@ export function createIconifyIcon(name) {
 
 
 /**
- * Data interface. Converts string inputs to values needed by Presenter layer.
+ * Data interface. Converts UI input types to values needed by Presenter layer.
  */
 export class TodoItemParams {
-    title
-    priority
-    deadline
-    note
+    title = ''
+    priority = new PriorityEnum
+    deadline = ''
+    note = ''
     
     /**
      * 
      * @param {String} title 
      * @param {Number} priority 
-     * @param {Date} deadline 
+     * @param {String} deadline 
      * @param {String} note 
      */
     constructor(title, priority, deadline, note) {
@@ -60,13 +60,18 @@ export class TodoItemParams {
     }
 
     /**
+     * 
      * @param {String} str
      */
     set deadline(str) {
         this.deadline = this.#sanitizeDeadline(str);
     }
 
-    get deadline() {
+    /**
+     * This is for UI display. For YYYY-MM-dd format, get 'deadline'.
+     * @returns {String} Deadline in MM/dd/yyyy format
+     */
+    get deadlineDisplay() {
         return DateFns.format(this.deadline, 'MM/dd/yyyy');
     }
 }
