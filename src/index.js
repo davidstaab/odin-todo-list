@@ -19,8 +19,6 @@ import * as Store from './store/store.js';
 import * as dateFns from 'date-fns';
 
 
-
-
 ///////
 // Utils
 
@@ -47,7 +45,7 @@ class TodoRegistry {
 
     /**
      * 
-     * @param {UI.TodoItemParams} params 
+     * @param {Object} params
      * @returns {Number} Hash of stringified params
      */
     register(params) {
@@ -83,11 +81,11 @@ class TodoRegistry {
  * @param {String} note 
  */
 function addTodoItem(title, priority, deadline, note) {
-    // TODO: Compare and align the types of TodoItemParams and this function's signature
     const params = new UI.TodoItemParams(title, priority.asNumber, deadline, note);
     const hash = registry.register(params); // Add to Registry
     UI.addItem(hash, params, { remove: handleRemoveItem }); // Add to UI
-    listOfLists.getListByName(UI.getSelectedList()).add(new Model.TodoItem(
+    let list = listOfLists.getListByName(UI.getSelectedList());
+    list.add(new Model.TodoItem(
         params.title,
         params.priority,
         params.deadline,
@@ -102,13 +100,21 @@ function removeTodoItem(hash) {
     registry.unregister(hash); // Remove from Registry
 }
 
+// Convenience functions for DRY principle
+const selectUIList = UI.selectList.bind(null, { selected: handleListSelected });
+const addUIList = UI.addList.bind(null, { 
+    selected: handleListSelected,
+    removed: handleListRemoved,
+});
+
 
 ////////////
 // Callbacks
 
 function handleListCreated(name) {
-    addUIList(name);
-    // TODO: Add list to model
+    const list = new Model.TodoList(name);
+    listOfLists.add(list); // Add to Model
+    addUIList(name); // Add to UI
 
     // This fires handleListSelected(), which displays the items
     selectUIList(name); 
@@ -131,9 +137,26 @@ function handleRemoveItem(hash) {
 }
 
 function handleListSelected(name) {
-    console.log(`Selected ${name} list`);
-    // TODO: Query items from model
-    // UI.displayListOfItems(items)
+    registry.flush();
+    let list = listOfLists.getListByName(name); // Read from Model
+    let items = list.sortDeadlineAsc().items
+        .map((elem) => {
+            let hash = registry.register(name); // Add to registry
+            let params = new UI.TodoItemParams(
+                elem.title,
+                elem.priority.asNumber,
+                elem.deadline,
+                elem.note,
+            );
+            return {
+                hash,
+                params,
+                callbacks: {
+                    remove: handleListRemoved,
+                },
+            }
+        });
+    UI.displayListOfItems(items); // Add (batch) to UI
 }
 
 function handleListRemoved(name, wasSelected) {
@@ -145,13 +168,6 @@ function handleListRemoved(name, wasSelected) {
 
 ///////
 // Init
-
-// Convenience functions for DRY principle
-const selectUIList = UI.selectList.bind(null, { selected: handleListSelected });
-const addUIList = UI.addList.bind(null, { 
-    selected: handleListSelected,
-    removed: handleListRemoved,
-});
 
 UI.createListsMenu({ listCreated: handleListCreated });
 UI.createItemsMenu({ itemCreated: handleItemCreated });

@@ -47,8 +47,8 @@ export default class ListList {
      * @returns {ListList} this
      */
     add(list) {
-        let index = this.#lists.findIndex((elem) => elem.name === list.name);
-        if (index < 0) throw new Error(`A list named ${list.name} already exists.`);
+        let idx = this.#lists.findIndex((elem) => elem.name === list.name);
+        if (idx >= 0) throw new Error(`A list named ${list.name} already exists.`);
         this.#lists.push(list);
         return this;
     }

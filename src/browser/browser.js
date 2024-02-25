@@ -92,15 +92,35 @@ function isListSelected(name) {
 
 /**
  * 
+ * @param {Object} callbacks 
+ * @param {Function} callbacks.selected
+ * @param {String} name 
+ */
+export function selectList(callbacks, name) {
+    const listCards = document.querySelectorAll('.list-card');
+
+    for (let card of listCards) {
+        if (card.dataset.name === name) {
+            card.classList.add('selected');
+        } else {
+            card.classList.remove('selected');
+        }
+    }
+    callbacks.selected(name);
+}
+
+/**
+ * 
  * @returns {String} List name
  */
 export function getSelectedList() {
     const lists = document.querySelectorAll('.list-card');
-    lists.forEach((card) => {
-        if (card.classList.contains('selected')) {
-            return card.dataset.name;
+
+    for (let list of lists) {
+        if (list.classList.contains('selected')) {
+            return list.dataset.name;
         }
-    });
+    }
 }
 
 /**
@@ -218,23 +238,4 @@ export function removeList(callbacks, name) {
     const wasSelected = isListSelected(name);
     listCards[index].remove();
     callbacks.removed(name, wasSelected);
-}
-
-/**
- * 
- * @param {Object} callbacks 
- * @param {Function} callbacks.selected
- * @param {String} name 
- */
-export function selectList(callbacks, name) {
-    const listCards = document.querySelectorAll('.list-card');
-
-    for (let card of listCards) {
-        if (card.dataset.name === name) {
-            card.classList.add('selected');
-        } else {
-            card.classList.remove('selected');
-        }
-    }
-    callbacks.selected(name);
 }

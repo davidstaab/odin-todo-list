@@ -2,13 +2,13 @@
 
 import * as safeJS from 'safejslib';
 import * as dateFns from 'date-fns';
-import { PriorityEnum } from '../lib/lib.js';
+import * as Lib from '../lib/lib.js';
 
 export default class TodoItem {
-    #title
-    #note
-    #priority
-    #deadline
+    #title = ''
+    #priority = Lib.PriorityEnum.normal
+    #deadline = ''
+    #note = ''
 
     static areSame(a, b) {
         if (!(a instanceof TodoItem && b instanceof TodoItem)) {
@@ -22,16 +22,16 @@ export default class TodoItem {
         );
     }
 
-    constructor({
+    constructor(
         title,
+        priority,
         deadline,
-        priority = PriorityEnum.normal,
         note = '',
-    }) {
+    ) {
         // Go through the setter functions to validate params
         this.title = title;
-        this.deadline = deadline;
         this.priority = priority;
+        this.deadline = deadline;
         this.note = note;
 
         return this;
@@ -40,14 +40,18 @@ export default class TodoItem {
     /**
      * @param {String} text
      */
-    set title(text) { this.#title = safeJS.sanitizeInput(text) }
+    set title(text) { 
+        this.#title = text ? safeJS.sanitizeInput(text) : '';
+    }
     
     get title() { return this.#title; }
 
     /**
      * @param {String} text
      */
-    set note(text) { this.#note = safeJS.sanitizeInput(text) }
+    set note(text) {
+        this.#note = text ? safeJS.sanitizeInput(text) : '';
+    }
 
     get note() { return this.#note; }
 
@@ -55,19 +59,19 @@ export default class TodoItem {
      * @param {Symbol} value A value from the Priority object
      */
     set priority(value) {
-        if (!(value instanceof PriorityEnum)) throw new TypeError(`${value} is not a PriorityEnum.`);
+        if (!(value instanceof Lib.PriorityEnum)) throw new TypeError(`${value} is not a PriorityEnum.`);
         this.#priority = value;
     }
 
     get priority() { return this.#priority; }
 
     /**
-     * @param {Date} date A Date object, used only with a level of precision of days (not hr/min/s)
+     * @param {String} str YYYY-MM-dd
      */
-    set deadline(date) {
-        if (!(date instanceof Date)) throw new TypeError(`Date param is of invalid type ${typeof date}`);
-        if (!dateFns.isValid(date)) throw new Error(`Invalid date value: ${date.toString()}`);
-        this.#deadline = date;
+    set deadline(str) {
+        // if (!(date instanceof Date)) throw new TypeError(`Date param is of invalid type ${typeof date}`);
+        if (!dateFns.isMatch(str, 'yyyy-MM-dd')) throw new Error(`Invalid date string: ${str.toString()}`);
+        this.#deadline = str;
     }
 
     get deadline() { return this.#deadline }
