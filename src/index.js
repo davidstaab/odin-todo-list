@@ -23,60 +23,6 @@ import * as dateFns from 'date-fns';
 // Utils
 
 /**
- * Implements a registry for Todo Items. This links the item cards
- * created in UI to the item entries in the model. Item cards should
- * carry their hash as a data attribute so they can be referenced
- * in the registry. On the model side, every time the model is sorted,
- * the registry should be flushed and updated (alongside doing the same
- * in the UI) so that the order of items in the registry mirrors the
- * order of items in the model.
- * 
- * Design note: This is a downside of using the MVP architecture: the
- * Presenter has to maintain state that links the Model's state to the
- * View's state. In MVC the model's state would be directly linked to
- * the view's state (but they wouldn't be as loosely coupled).
- */
-class TodoRegistry {
-    #hashes = []
-
-    constructor() {
-        this.#hashes = [];
-    }
-
-    /**
-     * 
-     * @param {UI.TodoItemParams} params
-     * @returns {Number} Hash of stringified params
-     */
-    register(params) {
-        const str = Object.values(params)
-            .reduce((prev, curr) => prev += String(curr), '');
-        const hashed = Lib.hash(str);
-        if (this.#hashes.includes(hashed)) {
-            throw new Error('An exact copy of this item is already registered.');
-        }
-        this.#hashes.push(hashed);
-        return hashed;
-    }
-
-    unregister(hash) {
-        let idx = this.#hashes.findIndex(val => val === hash);
-        if (idx < 0) throw new Error(`${hash} not found in registry.`);
-        this.#hashes.splice(idx, 1);
-    }
-
-    flush() {
-        this.#hashes = [];
-    }
-
-    findIdx(hash) {
-        return this.#hashes.findIndex(val => val === hash);
-    }
-
-    get hashes() { return this.#hashes };
-}
-
-/**
  * 
  * @param {String} title 
  * @param {Lib.PriorityEnum} priority 
@@ -174,7 +120,7 @@ function handleListRemoved(name, wasSelected) {
 
 UI.createListsMenu({ listCreated: handleListCreated });
 UI.createItemsMenu({ itemCreated: handleItemCreated });
-const registry = new TodoRegistry();
+const registry = new Lib.TodoRegistry();
 
 // TODO: Load persisted state, create items and lists from it
 const defaultList = new Model.TodoList(Lib.DEFAULT_LIST_NAME);
