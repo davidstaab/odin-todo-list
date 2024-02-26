@@ -4,7 +4,8 @@ import { TodoList } from "./model-todo-list.js";
 import * as Lib from '../lib/lib.js';
 
 export default class ListList {
-    #lists
+    #lists = []
+    #changedCb = null
 
     /**
      * 
@@ -14,6 +15,16 @@ export default class ListList {
         if (!Array.isArray(lists)) throw new Error('Argument is not an array of todo lists.');
         this.#lists = lists;
         return this;
+    }
+
+    /**
+     * Sets callback function to fire on model state change.
+     * Making it a setter guarantees it only fires after object
+     * has been constructed.
+     * @param {Function} cbFn
+     */
+    set changedCb(cbFn) {
+        this.#changedCb = cbFn;
     }
 
     /**
@@ -50,6 +61,7 @@ export default class ListList {
         let idx = this.#lists.findIndex((elem) => elem.name === list.name);
         if (idx >= 0) throw new Error(`A list named ${list.name} already exists.`);
         this.#lists.push(list);
+        if (this.#changedCb) this.#changedCb();
         return this;
     }
 
@@ -68,6 +80,7 @@ export default class ListList {
         }
 
         this.#lists.splice(itemIdx, 1);
+        if (this.#changedCb) this.#changedCb();
         return this;
     }
 
@@ -92,4 +105,12 @@ export default class ListList {
     }
 
     get lists() { return this.#lists; }
+
+    toString() {
+        const flatLists = this.#lists.reduce(
+            (arr, list) => arr.push(list.toString()),
+            [],
+        );
+        return JSON.stringify({ lists: flatLists });
+    }
 }

@@ -1,12 +1,16 @@
 'use strict'
 
-// This module is for implementing persistent data storage.
-// Initially it'll be `localStorage`.
+import ListList from "../model/model-list-list.js";
 
 export function load() {
-    // json.stringify()
+    // json.parse() --> rebuild Model by constructing objects
 }
 
-export function save() {
-    // json.parse()
+/**
+ * Saves the Model to browser's localStorage
+ * @param {ListList} listList List of lists used by the Presenter
+ */
+export function save(listList) {
+    let flatListList = listList.toString();
+    localStorage.setItem('TodoLister__ListOfLists', flatListList);
 }

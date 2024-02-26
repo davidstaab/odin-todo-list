@@ -7,6 +7,7 @@ import { PriorityEnum } from '../lib/lib.js';
 export default class TodoList {
     #items = []
     name = ''
+    #changedCb = null;
 
     /**
      * @constructor
@@ -22,12 +23,23 @@ export default class TodoList {
     }
 
     /**
+     * Sets callback function to fire on model state change.
+     * Making it a setter guarantees it only fires after object
+     * has been constructed.
+     * @param {Function} cbFn
+     */
+    set changedCb(cbFn) {
+        this.#changedCb = cbFn;
+    }
+
+    /**
      * 
      * @param {TodoItem} item 
      * @returns {TodoList}
      */
     add(item) {
         this.#items.push(item);
+        if (this.#changedCb) this.#changedCb();
         return this;
     }
 
@@ -58,6 +70,7 @@ export default class TodoList {
         }
 
         this.#items.splice(itemIdx, 1);
+        if (this.#changedCb) this.#changedCb();
         return this;
     }
 
@@ -86,5 +99,16 @@ export default class TodoList {
             return -1 * PriorityEnum.compareAsc(a.priority, b.priority);
         });
         return this;
+    }
+
+    toString() {
+        const flatItems = this.#items.reduce(
+            (arr, item) => arr.push(item.toString()),
+            [],
+        );
+        return JSON.stringify({
+            name: this.name,
+            items: flatItems,
+        });
     }
 }

@@ -34,12 +34,14 @@ function addTodoItem(title, priority, deadline, note) {
     const hash = registry.register(params); // Add to Registry
     UI.addItem(hash, params, { remove: handleRemoveItem }); // Add to UI
     let list = listOfLists.getListByName(UI.getSelectedList());
-    list.add(new Model.TodoItem(
+    let todo = new Model.TodoItem(
         params.title,
         params.priority,
         params.deadline,
         params.note,
-    )); // Add to Model
+    );
+    todo.changedCb = handleModelChanged;
+    list.add(todo); // Add to Model
 }
 
 function removeTodoItem(hash) {
@@ -47,6 +49,17 @@ function removeTodoItem(hash) {
     listOfLists.getListByName(UI.getSelectedList()).remove(idx); // Remove from Model
     UI.removeItem(idx); // Remove from UI
     registry.unregister(hash); // Remove from Registry
+}
+
+/**
+ * Creates a new TodoList object
+ * @param {String} name 
+ * @returns {Model.TodoList}
+ */
+function createTodolist(name) {
+    const list = new Model.TodoList(name);
+    list.changedCb = handleModelChanged;
+    return list;
 }
 
 // Convenience functions for DRY principle
@@ -61,7 +74,7 @@ const addUIList = UI.addList.bind(null, {
 // Callbacks
 
 function handleListCreated(name) {
-    const list = new Model.TodoList(name);
+    const list = createTodolist(name);
     listOfLists.add(list); // Add to Model
     addUIList(name); // Add to UI
 
@@ -114,6 +127,11 @@ function handleListRemoved(name, wasSelected) {
     if (wasSelected) selectUIList(Lib.DEFAULT_LIST_NAME);
 }
 
+function handleModelChanged() {
+    // TODO: Use that gang of 4 pattern to prevent excessive repeated saves
+    Store.save(listOfLists);
+}
+
 
 ///////
 // Init
@@ -123,8 +141,9 @@ UI.createItemsMenu({ itemCreated: handleItemCreated });
 const registry = new Lib.TodoRegistry();
 
 // TODO: Load persisted state, create items and lists from it
-const defaultList = new Model.TodoList(Lib.DEFAULT_LIST_NAME);
+const defaultList = createTodolist(Lib.DEFAULT_LIST_NAME);
 const listOfLists = new Model.ListList([defaultList]).sortAsc();
+listOfLists.changedCb = handleModelChanged;
 
 for (let list of listOfLists.lists) { 
     addUIList(list.name, { deleteBtn: list.name !== Lib.DEFAULT_LIST_NAME });
