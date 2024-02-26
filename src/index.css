@@ -267,14 +267,9 @@ header {
     background-color: white;
 }
 
-.new-btn .iconify {
-    /* Icon inside button */
+button .iconify { /* SVG icon */
     height: 20px;
     width: 20px;
-}
-
-.iconify {
-    border-radius: 100%;
 }
 
 .due .date {
@@ -284,11 +279,49 @@ header {
 }
 
 dialog {
+    /* Note: Can't make a dialog a flex container. It bugs out. */
+
     background-color: white;
     border: 2px solid var(--dark-sunset);
     border-radius: 5px;
+    min-width: 200px;
+}
+
+dialog form > div {
+    width: 100%;
+}
+
+/* Unsure why I had to resort to an id selector */
+#new-item-title { 
+    width: 100%;
+}
+
+dialog form > div > input {
+    width: 100%;
+}
+
+dialog form > fieldset {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+dialog form textarea {
+    width: 100%;
 }
 
 dialog::backdrop {
     background-color: var(--dialog-backdrop);
+}
+
+dialog button {
+    padding: 2px 5px;
+    border-radius: 5px;
+    border: solid 1px darkgray;
+}
+
+dialog .buttons {
+    /* Flex container */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

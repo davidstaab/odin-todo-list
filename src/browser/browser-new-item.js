@@ -1,6 +1,7 @@
 'use strict'
 
 import * as DateFns from 'date-fns';
+import { createIconifyIcon } from "./browser-lib.js";
 
 
 // TODO: How to decouple this module from the model? Use interface classes
@@ -95,14 +96,16 @@ export function createNewItemDialog(submitCb) {
     // 'Submit' button
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
-    submitBtn.textContent = 'Create';
+    const icon1 = createIconifyIcon('mdi-checkbox-multiple-outline');
+    submitBtn.appendChild(icon1);
     buttonsDiv.appendChild(submitBtn);
     formEl.addEventListener('submit', submitCb);
 
     // 'Cancel' button
     const cancelBtn = document.createElement('button');
     cancelBtn.type = 'button';
-    cancelBtn.textContent = 'Cancel';
+    const icon2 = createIconifyIcon('mdi-cancel');
+    cancelBtn.appendChild(icon2);
     cancelBtn.addEventListener('click', () => dialogEl.close());
     buttonsDiv.appendChild(cancelBtn);
 

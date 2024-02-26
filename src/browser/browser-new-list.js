@@ -1,5 +1,7 @@
 'use strict'
 
+import { createIconifyIcon } from "./browser-lib.js";
+
 /**
  * 
  * @param {Function} submitCb Callback for the submit action
@@ -30,11 +32,25 @@ export default function createNewListDialog(submitCb) {
     titleDiv.appendChild(titleInput);
     formEl.appendChild(titleDiv);
 
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.classList.add('buttons');
+    formEl.appendChild(buttonsDiv);
+
     // 'Submit' button
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
-    formEl.appendChild(submitBtn);
+    const icon = createIconifyIcon('mdi-playlist-check');
+    submitBtn.appendChild(icon);
+    buttonsDiv.appendChild(submitBtn);
     formEl.addEventListener('submit', submitCb);
+
+    // 'Cancel' button
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    const icon2 = createIconifyIcon('mdi-cancel');
+    cancelBtn.appendChild(icon2);
+    cancelBtn.addEventListener('click', () => dialogEl.close());
+    buttonsDiv.appendChild(cancelBtn);
 
     document.body.appendChild(dialogEl);
     return dialogEl;
