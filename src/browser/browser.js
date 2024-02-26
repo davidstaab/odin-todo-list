@@ -81,12 +81,12 @@ function displayNewListDialog(callbacks) {
  * @returns {Boolean}
  */
 function isListSelected(name) {
-    const lists = document.querySelectorAll('.list-card');
-    lists.forEach((card) => {
+    const cards = document.querySelectorAll('.list-card');
+    for (let card of cards) {
         if (card.dataset.name === name) {
             return card.classList.contains('selected');
         }
-    });
+    }
     return false;
 }
 

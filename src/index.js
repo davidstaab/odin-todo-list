@@ -45,13 +45,16 @@ class TodoRegistry {
 
     /**
      * 
-     * @param {Object} params
+     * @param {UI.TodoItemParams} params
      * @returns {Number} Hash of stringified params
      */
     register(params) {
         const str = Object.values(params)
             .reduce((prev, curr) => prev += String(curr), '');
         const hashed = Lib.hash(str);
+        if (this.#hashes.includes(hashed)) {
+            throw new Error('An exact copy of this item is already registered.');
+        }
         this.#hashes.push(hashed);
         return hashed;
     }
@@ -141,18 +144,18 @@ function handleListSelected(name) {
     let list = listOfLists.getListByName(name); // Read from Model
     let items = list.sortDeadlineAsc().items
         .map((elem) => {
-            let hash = registry.register(name); // Add to registry
             let params = new UI.TodoItemParams(
                 elem.title,
                 elem.priority.asNumber,
                 elem.deadline,
                 elem.note,
-            );
+                );
+            let hash = registry.register(params); // Add to registry
             return {
                 hash,
                 params,
                 callbacks: {
-                    remove: handleListRemoved,
+                    remove: handleRemoveItem,
                 },
             }
         });
@@ -160,9 +163,9 @@ function handleListSelected(name) {
 }
 
 function handleListRemoved(name, wasSelected) {
-    console.log(`Removed list ${name}`);
-    // TODO: Remove list and its items from model
-    // if (wasSelected) // TODO: Get first list in model, selectUILIst()
+    listOfLists.remove(name); // Remove from Model
+    registry.flush()
+    if (wasSelected) selectUIList(Lib.DEFAULT_LIST_NAME);
 }
 
 
