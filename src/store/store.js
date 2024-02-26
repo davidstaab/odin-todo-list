@@ -3,7 +3,7 @@
 import ListList from "../model/model-list-list.js";
 
 export function load() {
-    // json.parse() --> rebuild Model by constructing objects
+    // ListList.parse() --> rebuild Model by constructing objects
 }
 
 /**
@@ -11,6 +11,6 @@ export function load() {
  * @param {ListList} listList List of lists used by the Presenter
  */
 export function save(listList) {
-    let flatListList = listList.toString();
+    let flatListList = listList.stringify();
     localStorage.setItem('TodoLister__ListOfLists', flatListList);
 }

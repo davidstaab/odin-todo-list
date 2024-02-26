@@ -23,6 +23,35 @@ export default class TodoItem {
         );
     }
 
+    /**
+     * Parses object from stored JSON string
+     * @param {String} json Output of this.stringify()
+     * @returns {TodoItem}  Reconstructed object
+     */
+    static parse(json) {
+        const object = JSON.parse(json);
+
+        let priority
+        switch (object.priority) {
+            case 'normal':
+                priority = Lib.PriorityEnum.normal;
+                break;
+            case 'high':
+                priority = Lib.PriorityEnum.high;
+                break;
+            case 'highest':
+                priority = Lib.PriorityEnum.highest;
+                break;
+        }
+
+        return new TodoItem(
+            object.title,
+            priority,
+            object.deadline,
+            object.note,
+        );
+    }
+
     constructor(
         title,
         priority,
@@ -98,7 +127,11 @@ export default class TodoItem {
         return dateFns.formatDate(this.#deadline, format);
     }
 
-    toString() {
+    /**
+     * Flattens object into a JSON string
+     * @returns {String} JSON encoded representation of this
+     */
+    stringify() {
         return JSON.stringify({
             title: this.#title,
             priority: this.#priority.asString,

@@ -2,12 +2,28 @@
 
 import * as dateFns from 'date-fns';
 import TodoItem from './model-todo.js';
-import { PriorityEnum } from '../lib/lib.js';
+import * as Lib from '../lib/lib.js';
 
 export default class TodoList {
     #items = []
     name = ''
     #changedCb = null;
+
+    /**
+     * Parses object from stored JSON string
+     * @param {String} json Output of this.stringify()
+     * @returns {TodoList}  Reconstructed object
+     */
+    static parse(json) {
+        const object = JSON.parse(json);
+        
+        let items;
+        for (let item of object.items) {
+            items.push(TodoItem.parse(item));
+        }
+
+        return new TodoList(object.name, items);
+    }
 
     /**
      * @constructor
@@ -89,23 +105,28 @@ export default class TodoList {
 
     sortPriorityAsc() {
         this.#items.sort((a, b) => {
-            return PriorityEnum.compareAsc(a.priority, b.priority);
+            return Lib.PriorityEnum.compareAsc(a.priority, b.priority);
         });
         return this;
     }
 
     sortPriorityDesc() {
         this.#items.sort((a, b) => {
-            return -1 * PriorityEnum.compareAsc(a.priority, b.priority);
+            return -1 * Lib.PriorityEnum.compareAsc(a.priority, b.priority);
         });
         return this;
     }
 
-    toString() {
-        const flatItems = this.#items.reduce(
-            (arr, item) => arr.push(item.toString()),
-            [],
-        );
+    /**
+     * Flattens object into a JSON string
+     * @returns {String} JSON encoded representation of this
+     */
+    stringify() {
+        let flatItems = [];
+        for (let item of this.#items) {
+            let flatItem = item.stringify();
+            flatItems.push(flatItem);
+        }
         return JSON.stringify({
             name: this.name,
             items: flatItems,

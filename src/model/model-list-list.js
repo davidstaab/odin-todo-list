@@ -1,11 +1,27 @@
 'use strict'
 
-import { TodoList } from "./model-todo-list.js";
+import TodoList from "./model-todo-list.js";
 import * as Lib from '../lib/lib.js';
 
 export default class ListList {
     #lists = []
     #changedCb = null
+
+    /**
+     * Parses object from stored JSON string
+     * @param {String} json Output of this.stringify()
+     * @returns {ListList}  Reconstructed object
+     */
+    static parse(json) {
+        const object = JSON.parse(json);
+        
+        let lists;
+        for (let list of object.items) {
+            lists.push(ListList.parse(list));
+        }
+
+        return new ListList(lists);
+    }
 
     /**
      * 
@@ -54,7 +70,7 @@ export default class ListList {
 
     /**
      * 
-     * @param {TodoList} list 
+     * @param {ListList} list 
      * @returns {ListList} this
      */
     add(list) {
@@ -106,11 +122,16 @@ export default class ListList {
 
     get lists() { return this.#lists; }
 
-    toString() {
-        const flatLists = this.#lists.reduce(
-            (arr, list) => arr.push(list.toString()),
-            [],
-        );
+    /**
+     * Flattens object into a JSON string
+     * @returns {String} JSON encoded representation of this
+     */
+    stringify() {
+        let flatLists = [];
+        for (let list of this.#lists) {
+            let flatList = list.stringify();
+            flatLists.push(flatList);
+        }
         return JSON.stringify({ lists: flatLists });
     }
 }
