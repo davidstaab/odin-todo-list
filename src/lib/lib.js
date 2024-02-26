@@ -62,7 +62,7 @@ export class TodoRegistry {
     register(params) {
         const str = Object.values(params)
             .reduce((prev, curr) => prev += String(curr), '');
-        const hashed = Lib.hash(str);
+        const hashed = hash(str);
         if (this.#hashes.includes(hashed)) {
             throw new Error('An exact copy of this item is already registered.');
         }
