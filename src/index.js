@@ -130,7 +130,6 @@ function handleListSelected(name) {
 
 function handleListRemoved(name, wasSelected) {
     listOfLists.remove(name); // Remove from Model
-    registry.flush()
     if (wasSelected) selectUIList(Lib.DEFAULT_LIST_NAME);
 }
 
