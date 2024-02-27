@@ -1,13 +1,9 @@
-@font-face {
-    font-family: ;
-    src: url();
-}
-
 /* Troubleshooting */
 
 /* * {
     outline: 1px solid red;
 } */
+
 
 /* Layout */
 
@@ -222,6 +218,11 @@ button {
 
 body { 
     color: var(--dark-gray);
+    font-family: sans-serif;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 400;
+    font-variation-settings: 
+        "wdth" 87.5;
 }
 
 header {
