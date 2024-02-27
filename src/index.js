@@ -16,14 +16,13 @@ import * as Model from './model/model.js';
 import * as UI from './browser/browser.js';
 import * as Lib from './lib/lib.js';
 import * as Storage from './storage/storage.js';
-import * as dateFns from 'date-fns';
 
 
 ///////
 // Utils
 
 /**
- * 
+ * Adds a todo item to the application state
  * @param {String} title 
  * @param {Lib.PriorityEnum} priority 
  * @param {String} deadline YYYY-MM-dd format
@@ -44,6 +43,10 @@ function addTodoItem(title, priority, deadline, note) {
     list.add(todo); // Add to Model
 }
 
+/**
+ * Removes a todo item from the application state
+ * @param {Number} hash Hash value taken from .item-card
+ */
 function removeTodoItem(hash) {
     const idx = registry.findIdx(hash);
     listOfLists.getListByName(UI.getSelectedList()).remove(idx); // Remove from Model
@@ -98,6 +101,10 @@ function handleRemoveItem(hash) {
     removeTodoItem(hash);
 }
 
+/**
+ * 
+ * @param {String} name Name of list
+ */
 function handleListSelected(name) {
     registry.flush();
     let list = listOfLists.getListByName(name); // Read from Model

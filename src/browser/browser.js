@@ -66,6 +66,10 @@ function displayNewListDialog(callbacks) {
         const formEl = e.submitter.closest('form');
         dialogEl.close();
         let formData = new FormData(formEl);
+        // TODO: Validate form data (i.e. prevent duplicate list name)
+        //  Might have to do this in the Presenter layer. Would split this
+        //  function into two functions: code above this comment and formEl.reset().
+        //  Presenter would be responsible for resetting the form after valdiation.
         formEl.reset();
         callbacks.listCreated(formData.get('title'));
     }
