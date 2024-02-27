@@ -24,4 +24,8 @@ Because this is a "school project" in the middle of the curriculum, I'm not goin
 ## Notes to Self
 Just some miscellaneous notes and reminders for when I come back to this project later...
 
-* [This](https://gist.github.com/cobyism/4730490) is how I configured the Github Pages site.
+* [This](https://gist.github.com/cobyism/4730490) is how I configured the Github Pages site. I made an npm script to run that command easily.
+    * Publication workflow:
+        1. `npm run build`
+        1. git commit && git push origin main
+        1. `npm run publish`
