@@ -99,6 +99,8 @@ export function createNewItemDialog(submitCb) {
     const icon1 = createIconifyIcon('mdi-checkbox-multiple-outline');
     submitBtn.appendChild(icon1);
     buttonsDiv.appendChild(submitBtn);
+    
+    // TODO: Validate inputs before accepting them and calling submitCb
     formEl.addEventListener('submit', submitCb);
 
     // 'Cancel' button
