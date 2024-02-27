@@ -129,6 +129,8 @@ export function getSelectedList() {
  * @param {Function} callbacks.itemCreated
  */
 export function createItemsMenu(callbacks) {
+    // TODO: Add buttons for all the sort options on the TodoList class
+
     const closure = () => displayNewItemDialog(callbacks);
     createMenuBtn('items', 'new', 'mdi-plus-box-multiple-outline', closure);
 }
