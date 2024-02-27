@@ -87,7 +87,7 @@ export class PriorityAttrs {
             color: 'white',
             backgroundColor: 'rgb(155, 122, 79)',
         },
-        dataIcon: 'mdi-alert-circle-outline',
+        dataIcon: 'mdi-clock-outline',
     }
     static high = {
         style: {
