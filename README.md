@@ -1,6 +1,9 @@
 # Project: To-do List
 This is a learning project assigned by [The Odin Project](https://www.theodinproject.com/), which is a self-driven bootcamp for front-end developer skills. The To-do List project (found [here](https://www.theodinproject.com/lessons/node-path-javascript-todo-list)) asks the learner to develop a web app that manages task lists. Several features are specificed, including the ability to manage multiple lists, the ability to sort tasks and lists, and the ability to save and retrieve data using the browser's local storage.
 
+## Play with it
+You can play with a live demo [here](https://davidstaab.github.io/odin-todo-list/).
+
 ## Learning Objectives
 I set out to use this project for improving my software architecture skill in Javascript. As such, I focused on the quality of my JS code more than the quality of my design and CSS code. The app has a simple design with no fancy features or branding.
 
