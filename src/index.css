@@ -1,3 +1,8 @@
+@font-face {
+    font-family: ;
+    src: url();
+}
+
 /* Troubleshooting */
 
 /* * {
@@ -37,6 +42,15 @@ body {
 header {
     height: var(--page-header-height);
     padding: 20px;
+}
+
+footer {
+    height: 50px;
+
+    /* Flex container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 h1,
@@ -155,7 +169,7 @@ p {
     height: 4rem;
     overflow-y: auto;
     word-break: break-word;
-    border: 1px solid var(--dark-sunset);
+    border: 1px solid var(--theme-secondary-dark);
     border-radius: 2px;
 }
 
@@ -195,22 +209,31 @@ button {
 /* Style */
 
 :root {
-    --light-blue: rgb(140, 220, 254);
-    --purple: rgb(78, 89, 140);
-    --dark-purple: rgb(38, 49, 96);
-    --sunset: rgb(248, 213, 168);
-    --dark-sunset: rgb(155, 122, 79);
-    --dialog-backdrop: rgba(155, 122, 79, 0.7);
-    --selected-bg: rgb(254, 243, 230);
+    --theme-primary: #faedcd;
+    --theme-primary-shadow: #bbb198;
+    --theme-accent: #e9edc9;
+    --theme-accent-dark: #ccd5ae;
+    --theme-secondary: #fefae0;
+    --theme-secondary-dark: #d4a373;
+    --dialog-backdrop: rgba(212, 163, 115, .7);
+    --unselected-bg: #faefd2;
+    --dark-gray: rgb(71, 70, 70);
+}
+
+body { 
+    color: var(--dark-gray);
 }
 
 header {
-    background-color: var(--light-blue);
+    background-color: var(--theme-accent-dark);
+}
+
+footer {
+    background-color: var(--theme-accent-dark);
 }
 
 .heading {
-    color: white;
-    background-color: var(--purple);
+    background-color: var(--theme-primary);
     padding-left: 20px;
 
     /* Flex container (for centering) */
@@ -219,46 +242,58 @@ header {
 }
 
 .lists-area {
-    border: 2px solid;
+    border: 2px solid var(--theme-primary-shadow);
 }
 
 .menu {
-    background-color: var(--purple);
+    background-color: var(--theme-primary);
     padding-right: 20px;
 }
 
 .menu button {
-    box-shadow: 5px 5px 5px var(--dark-purple);
+    padding: 5px 10px;
+    border-radius: 20px;
+    box-shadow: 2px 2px 2px var(--theme-primary-shadow);
+}
+
+button {
+    border: 1px solid var(--dark-gray);
+    background-color: white;
+    border-radius: 5px;
 }
 
 .lists-list {
-    background-color: var(--sunset);
+    background-color: var(--theme-secondary);
     padding: 10px;
 }
 
 .list-card {
     padding: 10px 20px;
-    background-color: var(--selected-bg);
+    background-color: var(--unselected-bg);
     border-radius: 5px;
-    border: 1px solid var(--dark-sunset);
-    box-shadow: 5px 5px 5px var(--dark-sunset);
-}
-
-.list-card .title {
-    color: var(--dark-sunset);
+    border: 1px solid var(--theme-secondary-dark);
+    box-shadow: 5px 5px 5px var(--theme-secondary-dark);
 }
 
 .list-card.selected {
     background-color: white;
-    box-shadow: 2px 2px 2px var(--dark-sunset);
+    box-shadow: 2px 2px 2px var(--theme-secondary-dark);
+}
+
+.list-card button {
+    box-shadow: 2px 2px 2px var(--theme-secondary-dark);
+}
+
+.list-card.selected button {
+    box-shadow: 2px 2px 2px var(--theme-primary-shadow);
 }
 
 .items-area {
-    border: 2px solid;
+    border: 2px solid var(--theme-primary-shadow);
 }
 
 .items-list {
-    background-color: var(--sunset);
+    background-color: var(--theme-secondary);
     padding: 10px;
 }
 
@@ -266,29 +301,32 @@ header {
     padding: 10px 20px;
     background-color: white;
     border-radius: 5px;
-    border: 1px solid var(--dark-sunset);
-    box-shadow: 5px 5px 5px var(--dark-sunset);
+    border: 1px solid var(--theme-secondary-dark);
+    box-shadow: 5px 5px 5px var(--theme-secondary-dark);
 }
 
 .item-card .title {
-    color: var(--dark-sunset);
-
     /* Flex container (for centering) */
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.new-btn {
-    padding: 5px 10px;
-    border-radius: 20px;
-    border: none;
-    background-color: white;
+.item-card button {
+    box-shadow: 2px 2px 2px var(--theme-primary-shadow);
 }
 
 button .iconify { /* SVG icon */
     height: 20px;
     width: 20px;
+}
+
+button .iconify * {  /* Strokes inside **button** SVGs */
+    color: var(--dark-gray);
+}
+
+.iconify * { /* Strokes inside **non-button** SVGs */
+    color: white;
 }
 
 .due .date {
@@ -304,8 +342,8 @@ button .iconify { /* SVG icon */
 dialog {
     /* Note: Can't make a dialog a flex container. It bugs out. */
 
-    background-color: white;
-    border: 2px solid var(--dark-sunset);
+    background-color: var(--theme-secondary);
+    border: 2px solid var(--theme-secondary-dark);
     border-radius: 5px;
     min-width: 200px;
 }
@@ -334,7 +372,9 @@ dialog::backdrop {
 dialog button {
     padding: 2px 5px;
     border-radius: 5px;
-    border: solid 1px darkgray;
+    background-color: white;
+    border: solid 1px var(--dark-gray);
+    box-shadow: 2px 2px 2px var(--theme-secondary-dark);
 }
 
 dialog .buttons {

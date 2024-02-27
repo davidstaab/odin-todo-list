@@ -201,6 +201,7 @@ export function addList(callbacks, name, { deleteBtn = true } = {}) {
     listCard.classList.add('list-card');
     listCard.dataset.name = name;
     const titleEl = document.createElement('h2');
+    titleEl.classList.add('title');
     titleEl.textContent = name;
     listCard.appendChild(titleEl);
     
