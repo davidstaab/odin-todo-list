@@ -92,7 +92,7 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+# dist - DS: dist is needed for Github Pages
 
 # Gatsby files
 .cache/
