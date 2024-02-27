@@ -15,7 +15,7 @@ import './index.css';
 import * as Model from './model/model.js';
 import * as UI from './browser/browser.js';
 import * as Lib from './lib/lib.js';
-import * as Store from './store/store.js';
+import * as Storage from './storage/storage.js';
 import * as dateFns from 'date-fns';
 
 
@@ -129,7 +129,7 @@ function handleListRemoved(name, wasSelected) {
 
 function handleModelChanged() {
     // TODO: Use that gang of 4 pattern to prevent excessive repeated saves
-    Store.save(listOfLists);
+    Storage.save(listOfLists);
 }
 
 
@@ -140,17 +140,18 @@ UI.createListsMenu({ listCreated: handleListCreated });
 UI.createItemsMenu({ itemCreated: handleItemCreated });
 const registry = new Lib.TodoRegistry();
 
-// TODO: Load persisted state, create items and lists from it
-const defaultList = createTodolist(Lib.DEFAULT_LIST_NAME);
-const listOfLists = new Model.ListList([defaultList]).sortAsc();
-listOfLists.changedCb = handleModelChanged;
+let listOfLists;
+const restored = Storage.load({ changed: handleModelChanged });
+if (restored) {
+    listOfLists = restored;
+} else {
+    const defaultList = createTodolist(Lib.DEFAULT_LIST_NAME);
+    listOfLists = new Model.ListList([defaultList]).sortAsc();
+}
 
 for (let list of listOfLists.lists) { 
     addUIList(list.name, { deleteBtn: list.name !== Lib.DEFAULT_LIST_NAME });
 }
-selectUIList(Lib.DEFAULT_LIST_NAME);
 
-let selectedListName = UI.getSelectedList();
-for (let todo of listOfLists.getListByName(selectedListName).items) {
-    addTodoItem(todo.title, todo.priority, todo.deadline, todo.note);
-}
+// This populates the items-list via handleListSelected.
+selectUIList(Lib.DEFAULT_LIST_NAME);

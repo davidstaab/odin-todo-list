@@ -11,18 +11,22 @@ export default class TodoList {
 
     /**
      * Parses object from stored JSON string
+     * @param {Object} callbacks
+     * @param {Function} callbacks.changed
      * @param {String} json Output of this.stringify()
      * @returns {TodoList}  Reconstructed object
      */
-    static parse(json) {
+    static parse(callbacks, json) {
         const object = JSON.parse(json);
         
-        let items;
+        let unflatItems = [];
         for (let item of object.items) {
-            items.push(TodoItem.parse(item));
+            unflatItems.push(TodoItem.parse(callbacks, item));
         }
 
-        return new TodoList(object.name, items);
+        let todoList = new TodoList(object.name, unflatItems);
+        todoList.changedCb = callbacks.changed;
+        return todoList;
     }
 
     /**

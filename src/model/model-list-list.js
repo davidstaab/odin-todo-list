@@ -9,18 +9,22 @@ export default class ListList {
 
     /**
      * Parses object from stored JSON string
+     * @param {Object} callbacks
+     * @param {Function} callbacks.changed
      * @param {String} json Output of this.stringify()
      * @returns {ListList}  Reconstructed object
      */
-    static parse(json) {
+    static parse(callbacks, json) {
         const object = JSON.parse(json);
         
-        let lists;
-        for (let list of object.items) {
-            lists.push(ListList.parse(list));
+        let unflatLists = [];
+        for (let list of object.lists) {
+            unflatLists.push(TodoList.parse(callbacks, list));
         }
 
-        return new ListList(lists);
+        let listList = new ListList(unflatLists);
+        listList.changedCb = callbacks.changed;
+        return listList;
     }
 
     /**

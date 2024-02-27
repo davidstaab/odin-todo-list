@@ -211,8 +211,11 @@ export function addList(callbacks, name, { deleteBtn = true } = {}) {
         listCard.appendChild(removeBtn);
     }
 
-    listCard.addEventListener('click', () => {
-        selectList({ selected: callbacks.selected }, name);
+    listCard.addEventListener('click', (e) => {
+        const card = e.target.closest('.list-card');
+        if (!card.classList.contains('selected')) {
+            selectList({ selected: callbacks.selected }, name);
+        }
     });
     listsList.appendChild(listCard);
 }

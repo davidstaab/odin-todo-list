@@ -25,10 +25,12 @@ export default class TodoItem {
 
     /**
      * Parses object from stored JSON string
+     * @param {Object} callbacks
+     * @param {Function} callbacks.changed
      * @param {String} json Output of this.stringify()
      * @returns {TodoItem}  Reconstructed object
      */
-    static parse(json) {
+    static parse(callbacks, json) {
         const object = JSON.parse(json);
 
         let priority
@@ -44,12 +46,14 @@ export default class TodoItem {
                 break;
         }
 
-        return new TodoItem(
+        let todoItem = new TodoItem(
             object.title,
             priority,
             object.deadline,
             object.note,
         );
+        todoItem.changedCb = callbacks.changed;
+        return todoItem;
     }
 
     constructor(
