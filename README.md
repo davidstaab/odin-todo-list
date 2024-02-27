@@ -20,3 +20,8 @@ Because this is a "school project" in the middle of the curriculum, I'm not goin
 * The app auto-saves itself on every model data change. I should really use a "debounce" or "timeout" pattern that watches for a series of change callbacks and then takes one save action at the end of them. Some kind of timeout mechanism will have to be used.
 * All the deadline dates are bold red text. That should only be true for those within a certain proximity to Date.now(). I should define a CSS class for that style and apply it dynamically when creating the .item-card.
 * Despite my best effort at using an enumeration class for priority values, I was forced at various points to reduce it to numbers and strings. This creates tight coupling among all the pieces of code using those string and number values. How can I really decouple them? Maybe the enum just isn't a clean, native part of Javascript...
+
+## Notes to Self
+Just some miscellaneous notes and reminders for when I come back to this project later...
+
+* [This](https://gist.github.com/cobyism/4730490) is how I configured the Github Pages site.
